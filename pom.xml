@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 	<name>StringSimilarity</name>
-    <groupId>de.unitrier.st</groupId>
+    <groupId>de.unitrier.st.stringsimilarity</groupId>
     <artifactId>string-similarity</artifactId>
     <version>1.0</version>
    
