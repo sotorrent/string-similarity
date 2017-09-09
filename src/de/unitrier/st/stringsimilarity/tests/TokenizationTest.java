@@ -14,14 +14,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class TokenizationTest {
+class TokenizationTest {
 
     private static final String str = "main(String[] args)  {\n print('Test');\n\texit(0); }";
 
     // ********** GENERAL TOKENIZATION **********
 
     @Test
-    public void testTokenization() {
+    void testTokenization() {
         assertEquals(" ", DEFAULT_SEPARATOR);
 
         List<String> expectedTokens = Arrays.asList("main(String[]", "args)", "{\n", "print('Test');\n\texit(0);", "}");
@@ -34,7 +34,7 @@ public class TokenizationTest {
     // ********** NGRAM TOKENIZATION **********
 
     @Test
-    public void testNgramTokenization() {
+    void testNgramTokenization() {
         assertEquals(4, NGRAM_SIZE);
 
         String normalizedStr = normalizeForNGram(str);
@@ -85,7 +85,7 @@ public class TokenizationTest {
     // ********** SHINGLE TOKENIZATION **********
 
     @Test
-    public void testShingleTokenization() {
+    void testShingleTokenization() {
         assertEquals(3, SHINGLE_SIZE);
 
         String normalizedStr = normalizeForShingle(str);

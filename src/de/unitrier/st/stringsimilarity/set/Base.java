@@ -1,9 +1,14 @@
 package de.unitrier.st.stringsimilarity.set;
 
 import com.google.common.collect.Sets;
+import org.apache.lucene.search.spell.NGramDistance;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 
+import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForNGram;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForShingle;
 import static de.unitrier.st.stringsimilarity.Tokenization.*;
@@ -16,7 +21,22 @@ import static de.unitrier.st.stringsimilarity.Tokenization.DEFAULT_SEPARATOR;
  */
 public class Base {
 
-    public static final double THRESHOLD = 0.6;
+    public static final double THRESHOLD = 0.6; // TODO: set after evaluation
+
+    private static NGramDistance ngramDistance = new NGramDistance();
+
+    /**
+     * Convert a list to a set.
+     * This is needed, because tokens() return a list of tokens, but the set-based metrics need a set of tokens.
+     * See also http://www.baeldung.com/convert-list-to-set-and-set-to-list
+     *
+     * @param stringList The list of strings that should be converted to a set of strings.
+     * @return A set containing the strings from stringList.
+     */
+    private static Set<String> listToSet(List<String> stringList){
+        return new HashSet<>(stringList);
+    }
+
 
     // ********** JACCARD **********
 
@@ -27,46 +47,6 @@ public class Base {
         } else {
             return (double) Sets.intersection(s1, s2).size() / Sets.union(s1, s2).size();
         }
-    }
-
-    // ngrams
-    static double nGramJaccard(String str1, String str2, int n) {
-        Set<String> nGramSet1 = nGramSet( str1, n);
-        Set<String> nGramSet2 = nGramSet(str2, n);
-
-        return jaccard(nGramSet1, nGramSet2);
-    }
-
-    // ngrams + normalization
-    static double nGramJaccardNormalized(String str1, String str2, int n) {
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n);
-
-        return jaccard(nGramSet1, nGramSet2);
-    }
-
-    // ngrams + normalization + padding
-    static double nGramJaccardNormalizedPadding(String str1, String str2, int n) {
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n, true);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n, true);
-
-        return jaccard(nGramSet1, nGramSet2);
-    }
-
-    // shingles
-    static double shingleJaccard(String str1, String str2, int n) {
-        Set<String> shingleSet1 = shingleSet(tokens(str1), DEFAULT_SEPARATOR, n);
-        Set<String> shingleSet2 = shingleSet(tokens(str2), DEFAULT_SEPARATOR, n);
-
-        return jaccard(shingleSet1, shingleSet2);
-    }
-
-    // shingles + normalization
-    static double shingleJaccardNormalized(String str1, String str2, int n) {
-        Set<String> shingleSet1 = shingleSet(tokens(normalizeForShingle(str1)), DEFAULT_SEPARATOR, n);
-        Set<String> shingleSet2 = shingleSet(tokens(normalizeForShingle(str2)), DEFAULT_SEPARATOR, n);
-
-        return jaccard(shingleSet1, shingleSet2);
     }
 
 
@@ -81,46 +61,6 @@ public class Base {
         }
     }
 
-    // ngrams
-    static double nGramDice(String str1, String str2, int n){
-        Set<String> nGramSet1 = nGramSet(str1, n);
-        Set<String> nGramSet2 = nGramSet(str2, n);
-
-        return dice(nGramSet1, nGramSet2);
-    }
-
-    // ngrams + normalization
-    static double nGramDiceNormalized(String str1, String str2, int n){
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n);
-
-        return dice(nGramSet1, nGramSet2);
-    }
-
-    // ngram + normalization + padding
-    static double nGramDiceNormalizedPadding(String str1, String str2, int n){
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n, true);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n, true);
-
-        return dice(nGramSet1, nGramSet2);
-    }
-
-    // shingles
-    static double shingleDice(String str1, String str2, int n) {
-        Set<String> shingleSet1 = shingleSet(tokens(str1), DEFAULT_SEPARATOR, n);
-        Set<String> shingleSet2 = shingleSet(tokens(str2), DEFAULT_SEPARATOR, n);
-
-        return dice(shingleSet1, shingleSet2);
-    }
-
-    // shingles + normalization
-    static double shingleDiceNormalized(String str1, String str2, int n) {
-        Set<String> shingleSet1 = shingleSet(tokens(normalizeForShingle(str1)), DEFAULT_SEPARATOR, n);
-        Set<String> shingleSet2 = shingleSet(tokens(normalizeForShingle(str2)), DEFAULT_SEPARATOR, n);
-
-        return dice(shingleSet1, shingleSet2);
-    }
-
 
     // ********** DICE VARIANT **********
 
@@ -131,38 +71,6 @@ public class Base {
         } else {
             return (double) 2 * Sets.intersection(s1, s2).size() / (s1.size() < s2.size() ? s1.size() : s2.size());
         }
-    }
-
-    // ngrams
-    static double nGramDiceVariant(String str1, String str2, int n){
-        Set<String> nGramSet1 = nGramSet(str1, n);
-        Set<String> nGramSet2 = nGramSet(str2, n);
-
-        return diceVariant(nGramSet1, nGramSet2);
-    }
-
-    // ngrams + normalization
-    public static double nGramDiceVariantNormalized(String str1, String str2, int n){
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n);
-
-        return diceVariant(nGramSet1, nGramSet2);
-    }
-
-    // shingles
-    static double shingleDiceVariant(String str1, String str2, int n) {
-        Set<String> shingleSet1 = shingleSet(tokens(str1), DEFAULT_SEPARATOR, n);
-        Set<String> shingleSet2 = shingleSet(tokens(str2), DEFAULT_SEPARATOR, n);
-
-        return diceVariant(shingleSet1, shingleSet2);
-    }
-
-    // shingles + normalization
-    static double shingleDiceVariantNormalized(String str1, String str2, int n) {
-        Set<String> shingleSet1 = shingleSet(tokens(normalizeForShingle(str1)), DEFAULT_SEPARATOR, n);
-        Set<String> shingleSet2 = shingleSet(tokens(normalizeForShingle(str2)), DEFAULT_SEPARATOR, n);
-
-        return diceVariant(shingleSet1, shingleSet2);
     }
 
 
@@ -177,43 +85,77 @@ public class Base {
         }
     }
 
+
+    // ********** BASE VARIANTS **********
+
+    // tokens
+    static double tokenSimilarity(String str1, String str2,
+                                         BiFunction<Set<String>, Set<String>, Double> coefficient) {
+        Set<String> nGramSet1 = listToSet(tokens(str1));
+        Set<String> nGramSet2 = listToSet(tokens(str2));
+
+        return coefficient.apply(nGramSet1, nGramSet2);
+    }
+
+    // tokens + normalization
+    static double tokenSimilarityNormalized(String str1, String str2,
+                                                   BiFunction<Set<String>, Set<String>, Double> coefficient) {
+        Set<String> nGramSet1 = nGramSet(normalizeForEdit(str1));
+        Set<String> nGramSet2 = nGramSet(normalizeForEdit(str2));
+
+        return coefficient.apply(nGramSet1, nGramSet2);
+    }
+
     // ngrams
-    static double nGramOverlap(String str1, String str2, int n){
-        Set<String> nGramSet1 = nGramSet(str1, n);
+    static double nGramSimilarity(String str1, String str2, int n,
+                                  BiFunction<Set<String>, Set<String>, Double> coefficient) {
+        Set<String> nGramSet1 = nGramSet( str1, n);
         Set<String> nGramSet2 = nGramSet(str2, n);
 
-        return overlap(nGramSet1, nGramSet2);
+        return coefficient.apply(nGramSet1, nGramSet2);
     }
 
     // ngrams + normalization
-    static double nGramOverlapNormalized(String str1, String str2, int n){
+    static double nGramSimilarityNormalized(String str1, String str2, int n,
+                                            BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n);
         Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n);
 
-        return overlap(nGramSet1, nGramSet2);
+        return coefficient.apply(nGramSet1, nGramSet2);
     }
 
     // ngrams + normalization + padding
-    static double nGramOverlapNormalizedPadding(String str1, String str2, int n){
+    static double nGramSimilarityNormalizedPadding(String str1, String str2, int n,
+                                                   BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n, true);
         Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n, true);
 
-        return overlap(nGramSet1, nGramSet2);
+        return coefficient.apply(nGramSet1, nGramSet2);
     }
 
     // shingles
-    static double shingleOverlap(String str1, String str2, int n) {
+    static double shingleSimilarity(String str1, String str2, int n,
+                                    BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> shingleSet1 = shingleSet(tokens(str1), DEFAULT_SEPARATOR, n);
         Set<String> shingleSet2 = shingleSet(tokens(str2), DEFAULT_SEPARATOR, n);
 
-        return overlap(shingleSet1, shingleSet2);
+        return coefficient.apply(shingleSet1, shingleSet2);
     }
 
     // shingles + normalization
-    static double shingleOverlapNormalized(String str1, String str2, int n) {
+    static double shingleSimilarityNormalized(String str1, String str2, int n,
+                                              BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> shingleSet1 = shingleSet(tokens(normalizeForShingle(str1)), DEFAULT_SEPARATOR, n);
         Set<String> shingleSet2 = shingleSet(tokens(normalizeForShingle(str2)), DEFAULT_SEPARATOR, n);
 
-        return overlap(shingleSet1, shingleSet2);
+        return coefficient.apply(shingleSet1, shingleSet2);
+    }
+
+
+    // ********** NGRAM SIMILARITY BASED ON KONDRAK05 **********
+
+    // ngrams
+    static double nGramSimilarityKondrak05(String str1, String str2){
+        return ngramDistance.getDistance(str1, str2);
     }
 }

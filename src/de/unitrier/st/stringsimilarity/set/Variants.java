@@ -1,13 +1,5 @@
 package de.unitrier.st.stringsimilarity.set;
 
-import org.apache.lucene.search.spell.NGramDistance;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static de.unitrier.st.stringsimilarity.Normalization.*;
-import static de.unitrier.st.stringsimilarity.Tokenization.*;
 import static de.unitrier.st.stringsimilarity.set.Base.*;
 
 /*
@@ -17,213 +9,338 @@ import static de.unitrier.st.stringsimilarity.set.Base.*;
  */
 public class Variants {
 
-    private static NGramDistance ngramDistance = new NGramDistance();
-
-    /**
-     * Convert a list to a set.
-     * This is needed, because tokens() return a list of tokens, but the set-based metrics need a set of tokens.
-     * See also http://www.baeldung.com/convert-list-to-set-and-set-to-list
-     *
-     * @param stringList The list of strings that should be converted to a set of strings.
-     * @return A set containing the strings from stringList.
-     */
-    private static Set<String> listToSet(List<String> stringList){
-        return new HashSet<>(stringList);
-    }
-
     // ********** JACCARD **********
 
     // tokens
     public static double tokenJaccard(String str1, String str2) {
-        Set<String> nGramSet1 = listToSet(tokens(str1));
-        Set<String> nGramSet2 = listToSet(tokens(str2));
-
-        return jaccard(nGramSet1, nGramSet2);
+        return Default.tokenJaccard(str1, str2);
     }
 
     // tokens + normalization
     public static double tokenJaccardNormalized(String str1, String str2) {
-        Set<String> nGramSet1 = nGramSet(normalizeForEdit(str1));
-        Set<String> nGramSet2 = nGramSet(normalizeForEdit(str2));
-
-        return jaccard(nGramSet1, nGramSet2);
+        return Default.tokenJaccardNormalized(str1, str2);
     }
 
     // ngrams
-    public static double nGramJaccard(String str1, String str2) {
-        return Base.nGramJaccard(str1, str2, NGRAM_SIZE);
+    public static double twoGramJaccard(String str1, String str2) {
+        return Base.nGramSimilarity(str1, str2, 2, Base::jaccard);
     }
 
-    // quatgrams
-    public static double quatGramJaccard(String str1, String str2) {
-        return Base.nGramJaccard(str1, str2, 4);
+    public static double threeGramJaccard(String str1, String str2) {
+        return Base.nGramSimilarity(str1, str2, 3, Base::jaccard);
+    }
+
+    public static double fourGramJaccard(String str1, String str2) {
+        return Base.nGramSimilarity(str1, str2, 4, Base::jaccard);
+    }
+
+    public static double fiveGramJaccard(String str1, String str2) {
+        return Base.nGramSimilarity(str1, str2, 5, Base::jaccard);
     }
 
     // ngrams + normalization
-    public static double nGramJaccardNormalized(String str1, String str2) {
-        return Base.nGramJaccardNormalized(str1, str2, NGRAM_SIZE);
+    public static double twoGramJaccardNormalized(String str1, String str2) {
+        return Base.nGramSimilarityNormalized(str1, str2, 2, Base::jaccard);
+    }
+
+    public static double threeGramJaccardNormalized(String str1, String str2) {
+        return Base.nGramSimilarityNormalized(str1, str2, 3, Base::jaccard);
+    }
+
+    public static double fourGramJaccardNormalized(String str1, String str2) {
+        return Base.nGramSimilarityNormalized(str1, str2, 4, Base::jaccard);
+    }
+
+    public static double fiveGramJaccardNormalized(String str1, String str2) {
+        return Base.nGramSimilarityNormalized(str1, str2, 5, Base::jaccard);
     }
 
     // ngrams + normalization + padding
-    public static double nGramJaccardNormalizedPadding(String str1, String str2) {
-        return Base.nGramJaccardNormalizedPadding(str1, str2, NGRAM_SIZE);
+    public static double twoGramJaccardNormalizedPadding(String str1, String str2) {
+        return Base.nGramSimilarityNormalizedPadding(str1, str2, 2, Base::jaccard);
+    }
+
+    public static double threeGramJaccardNormalizedPadding(String str1, String str2) {
+        return Base.nGramSimilarityNormalizedPadding(str1, str2, 3, Base::jaccard);
+    }
+
+    public static double fourGramJaccardNormalizedPadding(String str1, String str2) {
+        return Base.nGramSimilarityNormalizedPadding(str1, str2, 4, Base::jaccard);
+    }
+
+    public static double fiveGramJaccardNormalizedPadding(String str1, String str2) {
+        return Base.nGramSimilarityNormalizedPadding(str1, str2, 5, Base::jaccard);
     }
 
     // shingles
-    public static double shingleJaccard(String str1, String str2) {
-        return Base.shingleJaccard(str1, str2, SHINGLE_SIZE);
+    public static double twoShingleJaccard(String str1, String str2) {
+        return shingleSimilarity(str1, str2, 2, Base::jaccard);
+    }
+
+    public static double threeShingleJaccard(String str1, String str2) {
+        return shingleSimilarity(str1, str2, 3, Base::jaccard);
     }
 
     // shingles + normalization
-    public static double shingleJaccardNormalized(String str1, String str2) {
-        return Base.shingleJaccardNormalized(str1, str2, SHINGLE_SIZE);
+    public static double twoShingleJaccardNormalized(String str1, String str2) {
+        return shingleSimilarityNormalized(str1, str2, 2, Base::jaccard);
+    }
+
+    public static double threeShingleJaccardNormalized(String str1, String str2) {
+        return shingleSimilarityNormalized(str1, str2, 3, Base::jaccard);
     }
 
 
     // ********** DICE **********
 
     // tokens
-    public static double tokenDice(String str1, String str2){
-        Set<String> nGramSet1 = listToSet(tokens(str1));
-        Set<String> nGramSet2 = listToSet(tokens(str2));
-
-        return dice(nGramSet1, nGramSet2);
+    public static double tokenDice(String str1, String str2) {
+        return Default.tokenDice(str1, str2);
     }
 
     // tokens + normalization
-    public static double tokenDiceNormalized(String str1, String str2){
-        Set<String> nGramSet1 = listToSet(tokens(normalizeForEdit(str1)));
-        Set<String> nGramSet2 = listToSet(tokens(normalizeForEdit(str2)));
-
-        return dice(nGramSet1, nGramSet2);
+    public static double tokenDiceNormalized(String str1, String str2) {
+        return Default.tokenDiceNormalized(str1, str2);
     }
 
     // ngrams
-    public static double nGramDice(String str1, String str2) {
-        return Base.nGramDice(str1, str2, NGRAM_SIZE);
+    public static double twoGramDice(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 2, Base::dice);
     }
 
-    // bigrams
-    public static double biGramDice(String str1, String str2) {
-        return Base.nGramDice(str1, str2, 2);
+    public static double threeGramDice(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 3, Base::dice);
+    }
+
+    public static double fourGramDice(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 4, Base::dice);
+    }
+
+    public static double fiveGramDice(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 5, Base::dice);
     }
 
     // ngrams + normalization
-    public static double nGramDiceNormalized(String str1, String str2) {
-        return Base.nGramDiceNormalized(str1, str2, NGRAM_SIZE);
+    public static double twoGramDiceNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 2, Base::dice);
+    }
+
+    public static double threeGramDiceNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 3, Base::dice);
+    }
+
+    public static double fourGramDiceNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 4, Base::dice);
+    }
+
+    public static double fiveGramDiceNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 5, Base::dice);
     }
 
     // ngrams + normalization + padding
-    public static double nGramDiceNormalizedPadding(String str1, String str2) {
-        return Base.nGramDiceNormalizedPadding(str1, str2, NGRAM_SIZE);
+    public static double twoGramDiceNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 2, Base::dice);
+    }
+
+    public static double threeGramDiceNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 3, Base::dice);
+    }
+
+    public static double fourGramDiceNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 4, Base::dice);
+    }
+
+    public static double fiveGramDiceNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 5, Base::dice);
     }
 
     // shingles
-    public static double shingleDice(String str1, String str2) {
-        return Base.shingleDice(str1, str2, SHINGLE_SIZE);
+    public static double twoShingleDice(String str1, String str2) {
+        return shingleSimilarity(str1, str2, 2, Base::dice);
+    }
+
+    public static double threeShingleDice(String str1, String str2) {
+        return shingleSimilarity(str1, str2, 3, Base::dice);
     }
 
     // shingles + normalization
-    public static double shingleDiceNormalized(String str1, String str2) {
-        return Base.shingleDiceNormalized(str1, str2, SHINGLE_SIZE);
+    public static double twoShingleDiceNormalized(String str1, String str2) {
+        return shingleSimilarityNormalized(str1, str2, 2, Base::dice);
+    }
+
+    public static double threeShingleDiceNormalized(String str1, String str2) {
+        return shingleSimilarityNormalized(str1, str2, 3, Base::dice);
     }
 
 
     // ********** DICE VARIANT *********
 
     // tokens
-    public static double tokenDiceVariant(String str1, String str2){
-        Set<String> nGramSet1 = listToSet(tokens(str1));
-        Set<String> nGramSet2 = listToSet(tokens(str2));
-
-        return diceVariant(nGramSet1, nGramSet2);
+    public static double tokenDiceVariant(String str1, String str2) {
+        return Default.tokenDiceVariant(str1, str2);
     }
 
     // tokens + normalization
-    public static double tokenDiceVariantNormalized(String str1, String str2){
-        Set<String> nGramSet1 = listToSet(tokens(normalizeForEdit(str1)));
-        Set<String> nGramSet2 = listToSet(tokens(normalizeForEdit(str2)));
-
-        return diceVariant(nGramSet1, nGramSet2);
+    public static double tokenDiceVariantNormalized(String str1, String str2) {
+        return Default.tokenDiceVariantNormalized(str1, str2);
     }
 
     // ngrams
-    static double nGramDiceVariant(String str1, String str2){
-        Set<String> nGramSet1 = nGramSet(str1, NGRAM_SIZE);
-        Set<String> nGramSet2 = nGramSet(str2, NGRAM_SIZE);
+    public static double twoGramDiceVariant(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 2, Base::diceVariant);
+    }
 
-        return diceVariant(nGramSet1, nGramSet2);
+    public static double threeGramDiceVariant(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 3, Base::diceVariant);
+    }
+
+    public static double fourGramDiceVariant(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 4, Base::diceVariant);
+    }
+
+    public static double fiveGramDiceVariant(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 5, Base::diceVariant);
     }
 
     // ngrams + normalization
-    public static double nGramDiceVariantNormalized(String str1, String str2){
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), NGRAM_SIZE);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), NGRAM_SIZE);
+    public static double twoGramDiceVariantNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 2, Base::diceVariant);
+    }
 
-        return diceVariant(nGramSet1, nGramSet2);
+    public static double threeGramDiceVariantNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 3, Base::diceVariant);
+    }
+
+    public static double fourGramDiceVariantNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 4, Base::diceVariant);
+    }
+
+    public static double fiveGramDiceVariantNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 5, Base::diceVariant);
     }
 
     // ngrams + normalization + padding
-    public static double nGramDiceVariantNormalizedPadding(String str1, String str2, int n){
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n, true);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n, true);
+    public static double twoGramDiceVariantNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 2, Base::diceVariant);
+    }
 
-        return diceVariant(nGramSet1, nGramSet2);
+    public static double threeGramDiceVariantNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 3, Base::diceVariant);
+    }
+
+    public static double fourGramDiceVariantNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 4, Base::diceVariant);
+    }
+
+    public static double fiveGramDiceVariantNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 5, Base::diceVariant);
+    }
+
+    // shingles
+    public static double twoShingleDiceVariant(String str1, String str2) {
+        return shingleSimilarity(str1, str2, 2, Base::diceVariant);
+    }
+
+    public static double threeShingleDiceVariant(String str1, String str2) {
+        return shingleSimilarity(str1, str2, 3, Base::diceVariant);
+    }
+
+    // shingles + normalization
+    public static double twoShingleDiceVariantNormalized(String str1, String str2) {
+        return shingleSimilarityNormalized(str1, str2, 2, Base::diceVariant);
+    }
+
+    public static double threeShingleDiceVariantNormalized(String str1, String str2) {
+        return shingleSimilarityNormalized(str1, str2, 3, Base::diceVariant);
     }
 
 
     // ********** OVERLAP **********
 
     // tokens
-    public static double tokenOverlap(String str1, String str2){
-        Set<String> nGramSet1 = listToSet(tokens(str1));
-        Set<String> nGramSet2 = listToSet(tokens(str2));
-
-        return overlap(nGramSet1, nGramSet2);
+    public static double tokenOverlap(String str1, String str2) {
+        return Default.tokenOverlap(str1, str2);
     }
 
     // tokens + normalization
-    public static double tokenOverlapNormalized(String str1, String str2){
-        Set<String> nGramSet1 = nGramSet(normalizeForEdit(str1));
-        Set<String> nGramSet2 = nGramSet(normalizeForEdit(str2));
-
-        return overlap(nGramSet1, nGramSet2);
+    public static double tokenOverlapNormalized(String str1, String str2) {
+        return Default.tokenOverlapNormalized(str1, str2);
     }
 
     // ngrams
-    public static double nGramOverlap(String str1, String str2) {
-        return Base.nGramOverlap(str1, str2, NGRAM_SIZE);
+    public static double twoGramOverlap(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 2, Base::overlap);
     }
 
-    // quatgrams
-    public static double quatGramOverlap(String str1, String str2) {
-        return Base.nGramOverlap(str1, str2, 4);
+    public static double threeGramOverlap(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 3, Base::overlap);
+    }
+
+    public static double fourGramOverlap(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 4, Base::overlap);
+    }
+
+    public static double fiveGramOverlap(String str1, String str2) {
+        return nGramSimilarity(str1, str2, 5, Base::overlap);
     }
 
     // ngrams + normalization
-    public static double nGramOverlapNormalized(String str1, String str2) {
-        return Base.nGramOverlapNormalized(str1, str2, NGRAM_SIZE);
+    public static double twoGramOverlapNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 2, Base::overlap);
+    }
+
+    public static double threeGramOverlapNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 3, Base::overlap);
+    }
+
+    public static double fourGramOverlapNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 4, Base::overlap);
+    }
+
+    public static double fiveGramOverlapNormalized(String str1, String str2) {
+        return nGramSimilarityNormalized(str1, str2, 5, Base::overlap);
     }
 
     // ngrams + normalization + padding
-    public static double nGramOverlapNormalizedPadding(String str1, String str2) {
-        return Base.nGramOverlapNormalizedPadding(str1, str2, NGRAM_SIZE);
+    public static double twoGramOverlapNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 2, Base::overlap);
+    }
+
+    public static double threeGramOverlapNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 3, Base::overlap);
+    }
+
+    public static double fourGramOverlapNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 4, Base::overlap);
+    }
+
+    public static double fiveGramOverlapNormalizedPadding(String str1, String str2) {
+        return nGramSimilarityNormalizedPadding(str1, str2, 5, Base::overlap);
     }
 
     // shingles
-    public static double shingleOverlap(String str1, String str2) {
-        return Base.shingleOverlap(str1, str2, SHINGLE_SIZE);
+    public static double twoShingleOverlap(String str1, String str2) {
+        return shingleSimilarity(str1, str2, 2, Base::overlap);
+    }
+
+    public static double threeShingleOverlap(String str1, String str2) {
+        return shingleSimilarity(str1, str2, 3, Base::overlap);
     }
 
     // shingles + normalization
-    public static double shingleOverlapNormalized(String str1, String str2) {
-        return Base.shingleOverlapNormalized(str1, str2, SHINGLE_SIZE);
+    public static double twoShingleOverlapNormalized(String str1, String str2) {
+        return shingleSimilarityNormalized(str1, str2, 2, Base::overlap);
     }
+
+    public static double threeShingleOverlapNormalized(String str1, String str2) {
+        return shingleSimilarityNormalized(str1, str2, 3, Base::overlap);
+    }
+
 
     // ********** NGRAM SIMILARITY BASED ON KONDRAK05 **********
 
-    // ngrams
     public static double nGramSimilarityKondrak05(String str1, String str2){
-        return ngramDistance.getDistance(str1, str2);
+        return Base.nGramSimilarityKondrak05(str1, str2);
     }
+
 }

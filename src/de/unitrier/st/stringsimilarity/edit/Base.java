@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForNGram;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForShingle;
 import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
@@ -17,7 +18,7 @@ import static de.unitrier.st.stringsimilarity.fingerprint.Base.fingerprintList;
  * All base metrics must return a value between 0.0 and 1.0.
  */
 public class Base {
-    public static final double THRESHOLD = 0.6;
+    public static final double THRESHOLD = 0.6; // TODO: set after evaluation
 
     /*
      * Jaro-Winkler excluded because it is optimized for single words.
@@ -32,7 +33,7 @@ public class Base {
      * See: https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm
      * See: https://github.com/tdebatty/java-string-similarity#levenshtein
      */
-    public static double levenshtein(String str1, String str2) {
+    static double levenshtein(String str1, String str2) {
         int n = str1.length();
         int m = str2.length();
 
@@ -83,13 +84,26 @@ public class Base {
     }
 
     /*
+     * Levenshtein base variants
+     */
+
+    // normalization
+    static double levenshteinNormalized(String str1, String str2) {
+        return Base.levenshtein(
+                normalizeForEdit(str1),
+                normalizeForEdit(str2)
+        );
+    }
+
+
+    /*
      * Similarity metric based on Damerau-Levenshtein distance.
      * Implements dynamic programming approach by Lowrance-Wagner (space in O(nm), runtime in O(nm)).
      *
      * See: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
      * See: ttps://github.com/tdebatty/java-string-similarity#damerau-levenshtein
      */
-    public static double damerauLevenshtein(String str1, String str2) {
+    static double damerauLevenshtein(String str1, String str2) {
         int n = str1.length();
         int m = str2.length();
 
@@ -146,6 +160,19 @@ public class Base {
 
         return (double) (Math.max(n, m) - dist[n][m]) / Math.max(n, m);
     }
+
+    /*
+     * Damerau-Levenshtein base variants
+     */
+
+    // normalization
+    static double damerauLevenshteinNormalized(String str1, String str2) {
+        return Base.damerauLevenshtein(
+                normalizeForEdit(str1),
+                normalizeForEdit(str2)
+        );
+    }
+
 
     /*
      * Similarity metric based on optimal alignment.
@@ -215,7 +242,7 @@ public class Base {
         return (double) (Math.max(n, m) - previous_row_1[m]) / Math.max(n, m);
     }
 
-    public static double optimalAlignment(String str1, String str2) {
+    static double optimalAlignment(String str1, String str2) {
         return optimalAlignment(
                 str1.chars()
                         .mapToObj(i -> String.valueOf((char)i)) // see http://stackoverflow.com/a/22436638
@@ -230,30 +257,40 @@ public class Base {
      * Optimal alignment base variants
      */
 
-    // ngram fingerprint
-    public static double nGramFingerprintOptimalAlignment(String str1, String str2, int nGramSize) {
+    // normalization
+    static double optimalAlignmentNormalized(String str1, String str2) {
+        return Base.optimalAlignment(
+                normalizeForEdit(str1),
+                normalizeForEdit(str2)
+        );
+    }
+
+    // ngrams + fingerprints
+    static double nGramFingerprintOptimalAlignment(String str1, String str2, int nGramSize) {
         return optimalAlignment(
                 fingerprintList(nGramList(str1, nGramSize)),
                 fingerprintList(nGramList(str2, nGramSize))
         );
     }
 
-    public static double nGramFingerprintOptimalAlignmentNormalized(String str1, String str2, int nGramSize) {
+    // ngrams + fingerprints + normalization
+    static double nGramFingerprintOptimalAlignmentNormalized(String str1, String str2, int nGramSize) {
         return optimalAlignment(
                 fingerprintList(nGramList(normalizeForNGram(str1), nGramSize)),
                 fingerprintList(nGramList(normalizeForNGram(str2), nGramSize))
         );
     }
 
-    // shingle fingerprint
-    public static double shingleFingerprintOptimalAlignment(String str1, String str2, int shingleSize) {
+    // shingles + fingerprints
+    static double shingleFingerprintOptimalAlignment(String str1, String str2, int shingleSize) {
         return optimalAlignment(
                 fingerprintList(shingleList(tokens(str1), shingleSize)),
                 fingerprintList(shingleList(tokens(str2), shingleSize))
         );
     }
 
-    public static double shingleFingerprintOptimalAlignmentNormalized(String str1, String str2, int shingleSize) {
+    // shingles + fingerprints + normalization
+    static double shingleFingerprintOptimalAlignmentNormalized(String str1, String str2, int shingleSize) {
         return optimalAlignment(
                 fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
                 fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
@@ -311,7 +348,7 @@ public class Base {
         return (double) previous_row[m] / Math.max(n, m);
     }
 
-    public static double longestCommonSubsequence(String str1, String str2) {
+    static double longestCommonSubsequence(String str1, String str2) {
         return longestCommonSubsequence(
                 str1.chars()
                         .mapToObj(i -> String.valueOf((char)i)) // see http://stackoverflow.com/a/22436638
@@ -326,30 +363,40 @@ public class Base {
      * Longest common subsequence base variants
      */
 
-    // ngram fingerprint
-    public static double nGramFingerprintLongestCommonSubsequence(String str1, String str2, int nGramSize) {
+    // normalization
+    static double longestCommonSubsequenceNormalized(String str1, String str2) {
+        return longestCommonSubsequence(
+                normalizeForEdit(str1),
+                normalizeForEdit(str2)
+        );
+    }
+
+    // ngrams + fingerprints
+    static double nGramFingerprintLongestCommonSubsequence(String str1, String str2, int nGramSize) {
         return longestCommonSubsequence(
                 fingerprintList(nGramList(str1), nGramSize),
                 fingerprintList(nGramList(str2), nGramSize)
         );
     }
 
-    public static double nGramFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int nGramSize) {
+    // ngrams + fingerprints + normalization
+    static double nGramFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int nGramSize) {
         return longestCommonSubsequence(
                 fingerprintList(nGramList(normalizeForNGram(str1), nGramSize)),
                 fingerprintList(nGramList(normalizeForNGram(str2), nGramSize))
         );
     }
 
-    // shingle fingerprint
-    public static double shingleFingerprintLongestCommonSubsequence(String str1, String str2, int shingleSize) {
+    // shingles + fingerprints
+    static double shingleFingerprintLongestCommonSubsequence(String str1, String str2, int shingleSize) {
         return longestCommonSubsequence(
                 fingerprintList(shingleList(tokens(str1), shingleSize)),
                 fingerprintList(shingleList(tokens(str2), shingleSize))
         );
     }
 
-    public static double shingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int shingleSize) {
+    // shingles + fingerprints + normalization
+    static double shingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int shingleSize) {
         return longestCommonSubsequence(
                 fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
                 fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))

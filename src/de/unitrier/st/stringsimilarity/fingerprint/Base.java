@@ -4,9 +4,11 @@ import com.google.common.collect.Multiset;
 import de.unitrier.st.stringsimilarity.util.MultisetCollector;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForNGram;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForShingle;
 import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
@@ -75,68 +77,45 @@ public class Base {
     */
 
     /*
-     * Winnowing base variants using Dice coefficient
+     * Winnowing base variants using tokens
      */
 
-    // ngram + dice
-    static double winnowingNGramDice(String str1, String str2, int nGramSize) {
+    // tokens
+    static double winnowingSimilarityToken(String str1, String str2,
+                                                  BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1, nGramSize), WINNOWING_WINDOW_SIZE)
+                fingerprintList(tokens(str1), WINNOWING_WINDOW_SIZE)
         );
 
         Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2, nGramSize), WINNOWING_WINDOW_SIZE)
+                fingerprintList(tokens(str2), WINNOWING_WINDOW_SIZE)
         );
 
-        return dice(set1, set2);
+        return coefficient.apply(set1, set2);
     }
 
-    // normalization + ngram + dice
-    static double winnowingNormalizedNGramDice(String str1, String str2, int nGramSize) {
+    // tokens + normalization
+    static double winnowingSimilarityTokenNormalized(String str1, String str2,
+                                                            BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), WINNOWING_WINDOW_SIZE)
+                fingerprintList(tokens(normalizeForEdit(str1)), WINNOWING_WINDOW_SIZE)
         );
 
         Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), WINNOWING_WINDOW_SIZE)
+                fingerprintList(tokens(normalizeForEdit(str2)), WINNOWING_WINDOW_SIZE)
         );
 
-        return dice(set1, set2);
-    }
-
-    // shingle + dice
-    static double winnowingShingleDice(String str1, String str2, int shingleSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str1), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str2), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return dice(set1, set2);
-    }
-
-    // normalization + shingle + dice
-    static double winnowingNormalizedShingleDice(String str1, String str2, int shingleSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return dice(set1, set2);
+        return coefficient.apply(set1, set2);
     }
 
 
     /*
-     * Winnowing base variants using Dice Variant coefficient
+     * Winnowing base variants using nGrams
      */
 
-    // ngram + dice variant
-    static double winnowingNGramDiceVariant(String str1, String str2, int nGramSize) {
+    // ngrams
+    static double winnowingNGramSimilarity(String str1, String str2, int nGramSize,
+                                           BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(nGramList(str1, nGramSize), WINNOWING_WINDOW_SIZE)
         );
@@ -145,11 +124,12 @@ public class Base {
                 fingerprintList(nGramList(str2, nGramSize), WINNOWING_WINDOW_SIZE)
         );
 
-        return diceVariant(set1, set2);
+        return coefficient.apply(set1, set2);
     }
 
-    // normalization + ngram + dice variant
-    static double winnowingNormalizedNGramDiceVariant(String str1, String str2, int nGramSize) {
+    // ngram + normalization
+    static double winnowingNGramSimilarityNormalized(String str1, String str2, int nGramSize,
+                                                     BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), WINNOWING_WINDOW_SIZE)
         );
@@ -158,68 +138,16 @@ public class Base {
                 fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), WINNOWING_WINDOW_SIZE)
         );
 
-        return diceVariant(set1, set2);
+        return coefficient.apply(set1, set2);
     }
-
-    // shingle + dice variant
-    static double winnowingShingleDiceVariant(String str1, String str2, int shingleSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str1), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str2), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return diceVariant(set1, set2);
-    }
-
-    // normalization + shingle + dice variant
-    static double winnowingNormalizedShingleDiceVariant(String str1, String str2, int shingleSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return diceVariant(set1, set2);
-    }
-
 
     /*
-     * Winnowing base variants using Jaccard coefficient
+     * Winnowing base variants using shingles
      */
 
-    // ngram + jaccard
-    static double winnowingNGramJaccard(String str1, String str2, int nGramSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1, nGramSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2, nGramSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return jaccard(set1, set2);
-    }
-
-    // normalization + ngram + jaccard
-    static double winnowingNormalizedNGramJaccard(String str1, String str2, int nGramSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return jaccard(set1, set2);
-    }
-
-    // shingle + jaccard
-    static double winnowingShingleJaccard(String str1, String str2, int shingleSize) {
+    // shingles
+    static double winnowingShingleSimilarity(String str1, String str2, int shingleSize,
+                                             BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(shingleList(tokens(str1), shingleSize), WINNOWING_WINDOW_SIZE)
         );
@@ -228,11 +156,12 @@ public class Base {
                 fingerprintList(shingleList(tokens(str2), shingleSize), WINNOWING_WINDOW_SIZE)
         );
 
-        return jaccard(set1, set2);
+        return coefficient.apply(set1, set2);
     }
 
-    // normalization + shingle + jaccard
-    static double winnowingNormalizedShingleJaccard(String str1, String str2, int shingleSize) {
+    // shingles + normalization
+    static double winnowingShingleSimilarityNormalized(String str1, String str2, int shingleSize,
+                                                       BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize), WINNOWING_WINDOW_SIZE)
         );
@@ -241,63 +170,6 @@ public class Base {
                 fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize), WINNOWING_WINDOW_SIZE)
         );
 
-        return jaccard(set1, set2);
-    }
-
-
-    /*
-     * Winnowing base variants using Overlap coefficient
-     */
-
-    // ngram + overlap
-    static double winnowingNGramOverlap(String str1, String str2, int nGramSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1, nGramSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2, nGramSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return overlap(set1, set2);
-    }
-
-    // normalization + ngram + overflap
-    static double winnowingNormalizedNGramOverlap(String str1, String str2, int nGramSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return overlap(set1, set2);
-    }
-
-    // shingle + overlap
-    static double winnowingShingleOverlap(String str1, String str2, int shingleSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str1), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str2), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return overlap(set1, set2);
-    }
-
-    // normalization + shingle + overlap
-    static double winnowingNormalizedShingleOverlap(String str1, String str2, int shingleSize) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return overlap(set1, set2);
+        return coefficient.apply(set1, set2);
     }
 }

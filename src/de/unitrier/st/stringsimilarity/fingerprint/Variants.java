@@ -1,14 +1,5 @@
 package de.unitrier.st.stringsimilarity.fingerprint;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static de.unitrier.st.stringsimilarity.Normalization.*;
-import static de.unitrier.st.stringsimilarity.Tokenization.*;
-import static de.unitrier.st.stringsimilarity.fingerprint.Base.WINNOWING_WINDOW_SIZE;
-import static de.unitrier.st.stringsimilarity.fingerprint.Base.fingerprintList;
-import static de.unitrier.st.stringsimilarity.set.Base.*;
-
 /*
  * Different variants of fingerprint-based similarity metrics.
  *
@@ -16,114 +7,49 @@ import static de.unitrier.st.stringsimilarity.set.Base.*;
  */
 public class Variants {
 
-    // ********** WINNOWING **********
 
     /*
     * Similarity metrics based on Winnowing with tokens.
     */
 
-    // token + dice
+    // tokens + dice
     public static double winnowingTokenDice(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(str1), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(str2), WINNOWING_WINDOW_SIZE)
-        );
-
-        return dice(set1, set2);
+        return Default.winnowingTokenDice(str1, str2);
     }
 
-    // normalization + token + dice
-    public static double winnowingNormalizedTokenDice(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str1)), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return dice(set1, set2);
+    // tokens + dice + normalization
+    public static double winnowingTokenDiceNormalized(String str1, String str2) {
+        return Default.winnowingTokenDiceNormalized(str1, str2);
     }
 
-    // token + dice variant
+    // tokens + dice variant
     public static double winnowingTokenDiceVariant(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(str1), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(str2), WINNOWING_WINDOW_SIZE)
-        );
-
-        return diceVariant(set1, set2);
+        return Default.winnowingTokenDiceVariant(str1, str2);
     }
 
-    // normalization + token + dice variant
-    public static double winnowingNormalizedTokenDiceVariant(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str1)), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return diceVariant(set1, set2);
+    // tokens + dice variant + normalization
+    public static double winnowingTokenDiceVariantNormalized(String str1, String str2) {
+        return Default.winnowingTokenDiceVariantNormalized(str1, str2);
     }
 
-    // token + jaccard
+    // tokens + jaccard
     public static double winnowingTokenJaccard(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(str1), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(str2), WINNOWING_WINDOW_SIZE)
-        );
-
-        return jaccard(set1, set2);
+        return Default.winnowingTokenJaccard(str1, str2);
     }
 
-    // normalization + token + jaccard
-    public static double winnowingNormalizedTokenJaccard(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str1)), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return jaccard(set1, set2);
+    // tokens + jaccard + normalization
+    public static double winnowingTokenJaccardNormalized(String str1, String str2) {
+        return Default.winnowingTokenJaccardNormalized(str1, str2);
     }
 
-    // token + overlap
+    // tokens + overlap
     public static double winnowingTokenOverlap(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(str1), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(str2), WINNOWING_WINDOW_SIZE)
-        );
-
-        return overlap(set1, set2);
+        return Default.winnowingTokenOverlap(str1, str2);
     }
 
-    // normalization + token + overlap
-    public static double winnowingNormalizedTokenOverlap(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str1)), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return overlap(set1, set2);
+    // tokens + overlap + normalization
+    public static double winnowingTokenOverlapNormalized(String str1, String str2) {
+        return Default.winnowingTokenOverlapNormalized(str1, str2);
     }
 
 
@@ -131,108 +57,207 @@ public class Variants {
     * Similarity metrics based on Winnowing with nGrams.
     */
 
-    // ngram + dice
-    public static double winnowingNGramDice(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1), WINNOWING_WINDOW_SIZE)
-        );
 
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2), WINNOWING_WINDOW_SIZE)
+    // ngrams + dice
+    public static double winnowingTwoGramDice(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        return dice(set1, set2);
     }
 
-    // normalization + ngram + dice
-    public static double winnowingNormalizedNGramDice(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1)), WINNOWING_WINDOW_SIZE)
+    public static double winnowingThreeGramDice(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return dice(set1, set2);
     }
 
-    // ngram + dice variant
-    public static double winnowingNGramDiceVariant(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1), WINNOWING_WINDOW_SIZE)
-        );
 
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2), WINNOWING_WINDOW_SIZE)
+    public static double winnowingFourGramDice(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        return diceVariant(set1, set2);
     }
 
-    // normalization + ngram + dice variant
-    public static double winnowingNormalizedNGramDiceVariant(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1)), WINNOWING_WINDOW_SIZE)
-        );
 
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2)), WINNOWING_WINDOW_SIZE)
+    public static double winnowingFiveGramDice(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        return diceVariant(set1, set2);
     }
 
-    // ngram + jaccard
-    public static double winnowingNGramJaccard(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1), WINNOWING_WINDOW_SIZE)
+    // ngrams + dice + normalization
+    public static double winnowingTwoGramDiceNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2), WINNOWING_WINDOW_SIZE)
-        );
-
-        return jaccard(set1, set2);
     }
 
-    // normalization + ngram + jaccard
-    public static double winnowingNormalizedNGramJaccard(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1)), WINNOWING_WINDOW_SIZE)
+    public static double winnowingThreeGramDiceNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return jaccard(set1, set2);
     }
 
-    // ngram + overlap
-    public static double winnowingNGramOverlap(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1), WINNOWING_WINDOW_SIZE)
+    public static double winnowingFourGramDiceNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2), WINNOWING_WINDOW_SIZE)
-        );
-
-        return overlap(set1, set2);
     }
 
-    // normalization + ngram + overlap
-    public static double winnowingNormalizedNGramOverlap(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1)), WINNOWING_WINDOW_SIZE)
+    public static double winnowingFiveGramDiceNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
+    }
 
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2)), WINNOWING_WINDOW_SIZE)
+    // ngrams + dice variant
+    public static double winnowingTwoGramDiceVariant(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
+    }
 
-        return overlap(set1, set2);
+    public static double winnowingThreeGramDiceVariant(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
+        );
+    }
+
+    public static double winnowingFourGramDiceVariant(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
+        );
+    }
+
+    public static double winnowingFiveGramDiceVariant(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
+        );
+    }
+
+    // ngrams + dice variant + normalization
+    public static double winnowingTwoGramDiceVariantNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
+        );
+    }
+
+    public static double winnowingThreeGramDiceVariantNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
+        );
+    }
+
+    public static double winnowingFourGramDiceVariantNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
+        );
+    }
+
+    public static double winnowingFiveGramDiceVariantNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
+        );
+    }
+
+    // ngrams + jaccard
+    public static double winnowingTwoGramJaccard(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    public static double winnowingThreeGramJaccard(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    public static double winnowingFourGramJaccard(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    public static double winnowingFiveGramJaccard(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    // ngrams + jaccard + normalization
+    public static double winnowingTwoGramJaccardNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    public static double winnowingThreeGramJaccardNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    public static double winnowingFourGramJaccardNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    public static double winnowingFiveGramJaccardNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    // ngrams + overlap
+    public static double winnowingTwoGramOverlap(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    public static double winnowingThreeGramOverlap(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    public static double winnowingFourGramOverlap(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    public static double winnowingFiveGramOverlap(String str1, String str2) {
+        return Base.winnowingNGramSimilarity(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    // ngrams + overlap + normalization
+    public static double winnowingTwoGramOverlapNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    public static double winnowingThreeGramOverlapNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    public static double winnowingFourGramOverlapNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    public static double winnowingFiveGramOverlapNormalized(String str1, String str2) {
+        return Base.winnowingNGramSimilarityNormalized(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
     }
 
 
@@ -240,108 +265,108 @@ public class Variants {
     * Similarity metrics based on Winnowing with shingles.
     */
 
-    // shingle + dice
-    public static double winnowingShingleDice(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str1)), WINNOWING_WINDOW_SIZE)
+    // shingles + dice
+    public static double winnowingTwoShingleDice(String str1, String str2) {
+        return Base.winnowingShingleSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return dice(set1, set2);
     }
 
-    // normalization + shingle + dice
-    public static double winnowingNormalizedShingleDice(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1))), WINNOWING_WINDOW_SIZE)
+    public static double winnowingThreeShingleDice(String str1, String str2) {
+        return Base.winnowingShingleSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2))), WINNOWING_WINDOW_SIZE)
-        );
-
-        return dice(set1, set2);
     }
 
-    // shingle + dice variant
-    public static double winnowingShingleDiceVariant(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str1)), WINNOWING_WINDOW_SIZE)
+    // shingles + dice + normalization
+    public static double winnowingTwoShingleDiceNormalized(String str1, String str2) {
+        return Base.winnowingShingleSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return diceVariant(set1, set2);
     }
 
-    // normalization + shingle + dice variant
-    public static double winnowingNormalizedShingleDiceVariant(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1))), WINNOWING_WINDOW_SIZE)
+    public static double winnowingThreeShingleDiceNormalized(String str1, String str2) {
+        return Base.winnowingShingleSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::dice
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2))), WINNOWING_WINDOW_SIZE)
-        );
-
-        return diceVariant(set1, set2);
     }
 
-    // shingle + jaccard
-    public static double winnowingShingleJaccard(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str1)), WINNOWING_WINDOW_SIZE)
+    // shingles + dice variant
+    public static double winnowingTwoShingleDiceVariant(String str1, String str2) {
+        return Base.winnowingShingleSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return jaccard(set1, set2);
     }
 
-    // normalization + shingle + jaccard
-    public static double winnowingNormalizedShingleJaccard(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1))), WINNOWING_WINDOW_SIZE)
+    public static double winnowingThreeShingleDiceVariant(String str1, String str2) {
+        return Base.winnowingShingleSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2))), WINNOWING_WINDOW_SIZE)
-        );
-
-        return jaccard(set1, set2);
     }
 
-    // shingle + overlap
-    public static double winnowingShingleOverlap(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str1)), WINNOWING_WINDOW_SIZE)
+    // shingles + dice variant + normalization
+    public static double winnowingTwoShingleDiceVariantNormalized(String str1, String str2) {
+        return Base.winnowingShingleSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return overlap(set1, set2);
     }
 
-    // normalization + shingle + overlap
-    public static double winnowingNormalizedShingleOverlap(String str1, String str2) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1))), WINNOWING_WINDOW_SIZE)
+    public static double winnowingThreeShingleDiceVariantNormalized(String str1, String str2) {
+        return Base.winnowingShingleSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
+    }
 
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2))), WINNOWING_WINDOW_SIZE)
+    // shingles + jaccard
+    public static double winnowingTwoShingleJaccard(String str1, String str2) {
+        return Base.winnowingShingleSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
         );
+    }
 
-        return overlap(set1, set2);
+    public static double winnowingThreeShingleJaccard(String str1, String str2) {
+        return Base.winnowingShingleSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    // shingles + jaccard + normalization
+    public static double winnowingTwoShingleJaccardNormalized(String str1, String str2) {
+        return Base.winnowingShingleSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    public static double winnowingThreeShingleJaccardNormalized(String str1, String str2) {
+        return Base.winnowingShingleSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::jaccard
+        );
+    }
+
+    // shingles + overlap
+    public static double winnowingTwoShingleOverlap(String str1, String str2) {
+        return Base.winnowingShingleSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    public static double winnowingThreeShingleOverlap(String str1, String str2) {
+        return Base.winnowingShingleSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    // shingles + overlap + normalization
+    public static double winnowingTwoShingleOverlapNormalized(String str1, String str2) {
+        return Base.winnowingShingleSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
+    }
+
+    public static double winnowingThreeShingleOverlapNormalized(String str1, String str2) {
+        return Base.winnowingShingleSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.set.Base::overlap
+        );
     }
 
 }

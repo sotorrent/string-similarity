@@ -23,7 +23,7 @@ import static de.unitrier.st.stringsimilarity.util.MultisetCollector.toMultiset;
  */
 public class Base {
 
-    public static final double THRESHOLD = 0.6;
+    public static final double THRESHOLD = 0.6; // TODO: set after evaluation
 
     public enum WeightingScheme{TERM_FREQUENCY, NORMALIZED_TERM_FREQUENCY, BOOL}
     private final static double k = 1.5; // for term frequency with normalization // TODO: according to this source, k should be between 1.2 and 2 (source: https://en.wikipedia.org/wiki/Okapi_BM25)
@@ -98,7 +98,7 @@ public class Base {
      */
 
     // tokens
-    static double tokensProfileCosineNormalized(String str1, String str2, WeightingScheme weightingScheme) {
+    static double cosineTokenNormalized(String str1, String str2, WeightingScheme weightingScheme) {
         Multiset<String> multiset1 = tokens(normalizeForEdit(str1))
                 .stream()
                 .collect(toMultiset());
@@ -109,28 +109,28 @@ public class Base {
         return cosine(multiset1, multiset2, weightingScheme);
     }
 
-    // nGrams
-    static double nGramProfileCosineNormalized(String str1, String str2, int nGramSize, WeightingScheme weightingScheme) {
+    // ngrams
+    static double cosineNGramNormalized(String str1, String str2, int nGramSize, WeightingScheme weightingScheme) {
         Multiset<String> nGramMultiset1 = nGramMultiset(normalizeForNGram(str1), nGramSize);
         Multiset<String> nGramMultiset2 = nGramMultiset(normalizeForNGram(str2), nGramSize);
 
         return cosine(nGramMultiset1, nGramMultiset2, weightingScheme);
     }
 
-    static double nGramProfileCosineNormalized(String str1, String str2, WeightingScheme weightingScheme) {
-        return nGramProfileCosineNormalized(str1, str2, NGRAM_SIZE, weightingScheme);
+    static double cosineNGramNormalized(String str1, String str2, WeightingScheme weightingScheme) {
+        return cosineNGramNormalized(str1, str2, NGRAM_SIZE, weightingScheme);
     }
 
     // shingles
-    static double shingleProfileCosineNormalized(String str1, String str2, int shingleSize, WeightingScheme weightingScheme) {
+    static double cosineShingleNormalized(String str1, String str2, int shingleSize, WeightingScheme weightingScheme) {
         Multiset<String> shingleMultiset1 = shingleMultiset(tokens(normalizeForShingle(str1)), shingleSize);
         Multiset<String> shingleMultiset2 = shingleMultiset(tokens(normalizeForShingle(str2)), shingleSize);
 
         return cosine(shingleMultiset1, shingleMultiset2, weightingScheme);
     }
 
-    static double shingleProfileCosineNormalized(String str1, String str2, WeightingScheme weightingScheme) {
-        return shingleProfileCosineNormalized(str1, str2, SHINGLE_SIZE, weightingScheme);
+    static double cosineShingleNormalized(String str1, String str2, WeightingScheme weightingScheme) {
+        return cosineShingleNormalized(str1, str2, SHINGLE_SIZE, weightingScheme);
     }
 
     /*
@@ -167,8 +167,20 @@ public class Base {
      * Base variants of Manhattan similarity.
      */
 
-    // nGrams
-    static double nGramManhattanNormalized(String str1, String str2, int nGramSize) {
+    // tokens
+    static double manhattanTokenNormalized(String str1, String str2) {
+        Multiset<String> multiset1 = tokens(normalizeForEdit(str1))
+                .stream()
+                .collect(toMultiset());
+        Multiset<String> multiset2 = tokens(normalizeForEdit(str2))
+                .stream()
+                .collect(toMultiset());
+
+        return manhattan(multiset1, multiset2);
+    }
+
+    // ngrams
+    static double manhattanNGramNormalized(String str1, String str2, int nGramSize) {
         Multiset<String> nGramMultiset1 = nGramMultiset(normalizeForNGram(str1), nGramSize);
         Multiset<String> nGramMultiset2 = nGramMultiset(normalizeForNGram(str2), nGramSize);
 
@@ -176,7 +188,7 @@ public class Base {
     }
 
     // shingles
-    static double shingleManhattanNormalized(String str1, String str2, int shingleSize) {
+    static double manhattanShingleNormalized(String str1, String str2, int shingleSize) {
         Multiset<String> shingleMultiset1 = shingleMultiset(tokens(normalizeForShingle(str1)), shingleSize);
         Multiset<String> shingleMultiset2 = shingleMultiset(tokens(normalizeForShingle(str2)), shingleSize);
 

@@ -2,10 +2,9 @@ package de.unitrier.st.stringsimilarity.tests;
 
 import org.junit.jupiter.api.Test;
 
-import static de.unitrier.st.stringsimilarity.edit.Base.*;
-import static de.unitrier.st.stringsimilarity.edit.Variants.twoShingleFingerprintLongestCommonSubsequence;
-import static de.unitrier.st.stringsimilarity.fingerprint.Variants.winnowingNGramDice;
-import static de.unitrier.st.stringsimilarity.set.Variants.quatGramJaccard;
+import static de.unitrier.st.stringsimilarity.edit.Variants.*;
+import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
+import static de.unitrier.st.stringsimilarity.set.Variants.fourGramJaccard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OtherTests {
@@ -44,7 +43,7 @@ class OtherTests {
 
     @Test
     void testNGramFunction(){
-        double sim = quatGramJaccard(
+        double sim = fourGramJaccard(
                 "Hallo Welt", // -> "Hall", "allo", "llo ", "lo W", "o We", " Wel", "Welt"
                 "Hallo Wlt"); // -> "Hall", "allo", "llo ", "lo W", "o Wl", "o Wlt"
                 // -> Union: 9, Intersection: 4 -> 4/9=0.444...
@@ -61,7 +60,7 @@ class OtherTests {
     void testJaccardFunction(){
         String s1 = "Hallo Du";
         String s2 = "Hallo Sie";
-        double sim = quatGramJaccard(s1, s2);
+        double sim = fourGramJaccard(s1, s2);
         //     "Hall" - "allo" - "llo " - "lo D"  - "o Du" - "lo S" - "o Si" - " Sie"
         // s1:   1         1       1        1          1        0        0        0
         // s2:   1         1       1        0          0        1        1        1

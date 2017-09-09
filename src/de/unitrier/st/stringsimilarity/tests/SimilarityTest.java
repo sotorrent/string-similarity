@@ -1,16 +1,16 @@
 package de.unitrier.st.stringsimilarity.tests;
 
-import de.unitrier.st.stringsimilarity.profile.Base;
 import org.junit.jupiter.api.Test;
 
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
-import static de.unitrier.st.stringsimilarity.edit.Base.*;
-import static de.unitrier.st.stringsimilarity.fingerprint.Variants.winnowingNGramDice;
-import static de.unitrier.st.stringsimilarity.fingerprint.Variants.winnowingShingleDice;
-import static de.unitrier.st.stringsimilarity.profile.Variants.nGramManhattanNormalized;
-import static de.unitrier.st.stringsimilarity.profile.Variants.nGramProfileCosineNormalizedBool;
-import static de.unitrier.st.stringsimilarity.profile.Variants.nGramProfileCosineNormalizedTermFrequency;
-import static de.unitrier.st.stringsimilarity.set.Variants.*;
+import static de.unitrier.st.stringsimilarity.edit.Variants.*;
+import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
+import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingShingleDice;
+import static de.unitrier.st.stringsimilarity.profile.Default.cosineNGramNormalizedBool;
+import static de.unitrier.st.stringsimilarity.profile.Default.cosineNGramNormalizedTermFrequency;
+import static de.unitrier.st.stringsimilarity.profile.Default.manhattanNGramNormalized;
+import static de.unitrier.st.stringsimilarity.set.Default.*;
+import static de.unitrier.st.stringsimilarity.set.Variants.nGramSimilarityKondrak05;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SimilarityTest {
@@ -78,11 +78,11 @@ class SimilarityTest {
         // TF: 22/(5*sqrt(28)) = 0.831
         // BOOL: 13/(4*sqrt(19)) = 0.746
 
-        assertEquals(22/(5*Math.sqrt(28)), nGramProfileCosineNormalizedTermFrequency(s1, s2), DELTA_MAX);
-        assertEquals(13/(4*Math.sqrt(19)), nGramProfileCosineNormalizedBool(s1, s2), DELTA_MAX);
+        assertEquals(22/(5*Math.sqrt(28)), cosineNGramNormalizedTermFrequency(s1, s2), DELTA_MAX);
+        assertEquals(13/(4*Math.sqrt(19)), cosineNGramNormalizedBool(s1, s2), DELTA_MAX);
 
         // check for rounding errors
-        assertEquals(1.0, nGramProfileCosineNormalizedTermFrequency("Please", "Please"));
+        assertEquals(1.0, cosineNGramNormalizedTermFrequency("Please", "Please"));
     }
 
     @Test
@@ -95,7 +95,7 @@ class SimilarityTest {
         // length2 = 4
         // sim = 1 - 2/(4+4) = 1 - 1/4 = 0.75
 
-        assertEquals(1 - 1.0/4, nGramManhattanNormalized("hallowe", "hallowo"), DELTA_MAX);
+        assertEquals(1 - 1.0/4, manhattanNGramNormalized("hallowe", "hallowo"), DELTA_MAX);
     }
 
     @Test
