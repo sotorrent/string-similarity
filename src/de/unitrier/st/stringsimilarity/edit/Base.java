@@ -4,9 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.unitrier.st.stringsimilarity.Normalization.normalizeForNGram;
+import static de.unitrier.st.stringsimilarity.Normalization.normalizeForShingle;
+import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
+import static de.unitrier.st.stringsimilarity.Tokenization.shingleList;
+import static de.unitrier.st.stringsimilarity.Tokenization.tokens;
+import static de.unitrier.st.stringsimilarity.fingerprint.Base.fingerprintList;
+
 /*
  * Edit-based similarity metrics.
- * All metrics should return a value between 0.0 and 1.0.
+ *
+ * All base metrics must return a value between 0.0 and 1.0.
  */
 public class Base {
     public static final double THRESHOLD = 0.6;
@@ -146,7 +154,7 @@ public class Base {
      * See: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance#Optimal_string_alignment_distance
      * See: https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm
      */
-    public static <T> double optimalAlignment(List<T> tokens1, List<T> tokens2) {
+    static <T> double optimalAlignment(List<T> tokens1, List<T> tokens2) {
         int n = tokens1.size();
         int m = tokens2.size();
 
@@ -219,6 +227,41 @@ public class Base {
     }
 
     /*
+     * Optimal alignment base variants
+     */
+
+    // ngram fingerprint
+    public static double nGramFingerprintOptimalAlignment(String str1, String str2, int nGramSize) {
+        return optimalAlignment(
+                fingerprintList(nGramList(str1, nGramSize)),
+                fingerprintList(nGramList(str2, nGramSize))
+        );
+    }
+
+    public static double nGramFingerprintOptimalAlignmentNormalized(String str1, String str2, int nGramSize) {
+        return optimalAlignment(
+                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize)),
+                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize))
+        );
+    }
+
+    // shingle fingerprint
+    public static double shingleFingerprintOptimalAlignment(String str1, String str2, int shingleSize) {
+        return optimalAlignment(
+                fingerprintList(shingleList(tokens(str1), shingleSize)),
+                fingerprintList(shingleList(tokens(str2), shingleSize))
+        );
+    }
+
+    public static double shingleFingerprintOptimalAlignmentNormalized(String str1, String str2, int shingleSize) {
+        return optimalAlignment(
+                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
+                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
+        );
+    }
+
+
+    /*
      * Similarity metric based on longest common subseqence.
      * Implemented using dynamic programming (space in O(min(n,m)) and runtime in O(nm)).
      *
@@ -226,7 +269,7 @@ public class Base {
      * See: https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
      * See: https://github.com/tdebatty/java-string-similarity#metric-longest-common-subsequence
      */
-    public static <T> double longestCommonSubsequence(List<T> tokens1, List<T> tokens2) {
+    static <T> double longestCommonSubsequence(List<T> tokens1, List<T> tokens2) {
         int n = tokens1.size();
         int m = tokens2.size();
 
@@ -276,6 +319,40 @@ public class Base {
                 str2.chars()
                         .mapToObj(i -> String.valueOf((char)i)) // see http://stackoverflow.com/a/22436638
                         .collect(Collectors.toList())
+        );
+    }
+
+    /*
+     * Longest common subsequence base variants
+     */
+
+    // ngram fingerprint
+    public static double nGramFingerprintLongestCommonSubsequence(String str1, String str2, int nGramSize) {
+        return longestCommonSubsequence(
+                fingerprintList(nGramList(str1), nGramSize),
+                fingerprintList(nGramList(str2), nGramSize)
+        );
+    }
+
+    public static double nGramFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int nGramSize) {
+        return longestCommonSubsequence(
+                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize)),
+                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize))
+        );
+    }
+
+    // shingle fingerprint
+    public static double shingleFingerprintLongestCommonSubsequence(String str1, String str2, int shingleSize) {
+        return longestCommonSubsequence(
+                fingerprintList(shingleList(tokens(str1), shingleSize)),
+                fingerprintList(shingleList(tokens(str2), shingleSize))
+        );
+    }
+
+    public static double shingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int shingleSize) {
+        return longestCommonSubsequence(
+                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
+                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
         );
     }
 }

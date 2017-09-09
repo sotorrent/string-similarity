@@ -7,7 +7,8 @@ import static de.unitrier.st.stringsimilarity.fingerprint.Base.*;
 
 /*
  * Different variants of edit-based similarity metrics.
- * All metrics should return a value between 0.0 and 1.0.
+ *
+ * All metric variants must be a BiFunction<String, String, Double> and return a value between 0.0 and 1.0.
  */
 public class Variants {
 
@@ -46,24 +47,10 @@ public class Variants {
         );
     }
 
-    public static double nGramFingerprintOptimalAlignment(String str1, String str2, int nGramSize) {
-        return optimalAlignment(
-                fingerprintList(nGramList(str1, nGramSize)),
-                fingerprintList(nGramList(str2, nGramSize))
-        );
-    }
-
     public static double nGramFingerprintOptimalAlignmentNormalized(String str1, String str2) {
         return optimalAlignment(
                 fingerprintList(nGramList(normalizeForNGram(str1))),
                 fingerprintList(nGramList(normalizeForNGram(str2)))
-        );
-    }
-
-    public static double nGramFingerprintOptimalAlignmentNormalized(String str1, String str2, int nGramSize) {
-        return optimalAlignment(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize)),
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize))
         );
     }
 
@@ -74,13 +61,6 @@ public class Variants {
         );
     }
 
-    public static double shingleFingerprintOptimalAlignment(String str1, String str2, int shingleSize) {
-        return optimalAlignment(
-                fingerprintList(shingleList(tokens(str1), shingleSize)),
-                fingerprintList(shingleList(tokens(str2), shingleSize))
-        );
-    }
-
     public static double shingleFingerprintOptimalAlignmentNormalized(String str1, String str2) {
         return optimalAlignment(
                 fingerprintList(shingleList(tokens(normalizeForShingle(str1)))),
@@ -88,12 +68,6 @@ public class Variants {
         );
     }
 
-    public static double shingleFingerprintOptimalAlignmentNormalized(String str1, String str2, int shingleSize) {
-        return optimalAlignment(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
-        );
-    }
 
     // ********** LONGEST COMMON SUBSEQUENCE **********
 
@@ -113,24 +87,10 @@ public class Variants {
         );
     }
 
-    public static double nGramFingerprintLongestCommonSubsequence(String str1, String str2, int nGramSize) {
-        return longestCommonSubsequence(
-                fingerprintList(nGramList(str1), nGramSize),
-                fingerprintList(nGramList(str2), nGramSize)
-        );
-    }
-
     public static double nGramFingerprintLongestCommonSubsequenceNormalized(String str1, String str2) {
         return longestCommonSubsequence(
                 fingerprintList(nGramList(normalizeForNGram(str1))),
                 fingerprintList(nGramList(normalizeForNGram(str2)))
-        );
-    }
-
-    public static double nGramFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int nGramSize) {
-        return longestCommonSubsequence(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize)),
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize))
         );
     }
 
@@ -141,10 +101,10 @@ public class Variants {
         );
     }
 
-    public static double shingleFingerprintLongestCommonSubsequence(String str1, String str2, int shingleSize) {
+    public static double twoShingleFingerprintLongestCommonSubsequence(String str1, String str2) {
         return longestCommonSubsequence(
-                fingerprintList(shingleList(tokens(str1), shingleSize)),
-                fingerprintList(shingleList(tokens(str2), shingleSize))
+                fingerprintList(shingleList(tokens(str1), 2)),
+                fingerprintList(shingleList(tokens(str2), 2))
         );
     }
 
@@ -152,13 +112,6 @@ public class Variants {
         return longestCommonSubsequence(
                 fingerprintList(shingleList(tokens(normalizeForShingle(str1)))),
                 fingerprintList(shingleList(tokens(normalizeForShingle(str2))))
-        );
-    }
-
-    public static double shingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int shingleSize) {
-        return longestCommonSubsequence(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
         );
     }
 }

@@ -3,17 +3,17 @@ package de.unitrier.st.stringsimilarity.tests;
 import de.unitrier.st.stringsimilarity.profile.Base;
 import org.junit.jupiter.api.Test;
 
-import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
 import static de.unitrier.st.stringsimilarity.edit.Base.*;
 import static de.unitrier.st.stringsimilarity.fingerprint.Variants.winnowingNGramDice;
 import static de.unitrier.st.stringsimilarity.fingerprint.Variants.winnowingShingleDice;
 import static de.unitrier.st.stringsimilarity.profile.Variants.nGramManhattanNormalized;
-import static de.unitrier.st.stringsimilarity.profile.Variants.nGramProfileCosineNormalized;
+import static de.unitrier.st.stringsimilarity.profile.Variants.nGramProfileCosineNormalizedBool;
+import static de.unitrier.st.stringsimilarity.profile.Variants.nGramProfileCosineNormalizedTermFrequency;
 import static de.unitrier.st.stringsimilarity.set.Variants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SimilarityTest {
+class SimilarityTest {
 
     // TODO: Write test cases for all variants
 
@@ -28,7 +28,7 @@ public class SimilarityTest {
 
     // ************************ EDIT-BASED
     @Test
-    public void testLevenshtein() {
+    void testLevenshtein() {
         assertEquals(1.0, levenshtein("", ""), DELTA_MAX);
         // TODO: update expected value (use fraction)
         //assertEquals(0.8985, levenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), DELTA_MAX);
@@ -36,7 +36,7 @@ public class SimilarityTest {
     }
 
     @Test
-    public void testDamerauLevenshtein() {
+    void testDamerauLevenshtein() {
         assertEquals(1.0, damerauLevenshtein("", ""), DELTA_MAX);
         // TODO: update expected value (use fraction)
         //assertEquals(0.8985, damerauLevenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), DELTA_MAX);
@@ -45,7 +45,7 @@ public class SimilarityTest {
 
     // ************************ SET-BASED
     @Test
-    public void testSetBased(){
+    void testSetBased(){
         assertEquals(15./24, nGramJaccard(s1,s2), DELTA_MAX);
         assertEquals(3./15, shingleJaccard(str1,str2), DELTA_MAX);
 
@@ -57,36 +57,36 @@ public class SimilarityTest {
     }
 
     @Test
-    public void testCosine(){
+    void testCosine(){
 
         // publ ubli blic lics icst cstr stri trin ring ingf ngf( gf(S f(st (str stri trin ring ings ngs)
         // publ ubli blic lics icst cstr stri trin ring ingf ngfu gfun func unc( nc(s c(st (str stri trin ring ings ngs)
 
         // scalar product:
         // TF: 22
-        // bool: 13
+        // BOOL: 13
 
         // Length string 1:
         // TF: sqrt(25) = 5
-        // bool: sqrt(16) = 4
+        // BOOL: sqrt(16) = 4
 
         // Length string 2
         // TF: sqrt(28) = 5.292
-        // bool: sqrt(19) = 4.359
+        // BOOL: sqrt(19) = 4.359
 
         // cosine similarity
         // TF: 22/(5*sqrt(28)) = 0.831
-        // bool: 13/(4*sqrt(19)) = 0.746
+        // BOOL: 13/(4*sqrt(19)) = 0.746
 
-        assertEquals(22/(5*Math.sqrt(28)), nGramProfileCosineNormalized(s1, s2, Base.WeightingScheme.termFrequency), DELTA_MAX);
-        assertEquals(13/(4*Math.sqrt(19)), nGramProfileCosineNormalized(s1, s2, Base.WeightingScheme.bool), DELTA_MAX);
+        assertEquals(22/(5*Math.sqrt(28)), nGramProfileCosineNormalizedTermFrequency(s1, s2), DELTA_MAX);
+        assertEquals(13/(4*Math.sqrt(19)), nGramProfileCosineNormalizedBool(s1, s2), DELTA_MAX);
 
         // check for rounding errors
-        assertEquals(1.0, nGramProfileCosineNormalized("Please", "Please", Base.WeightingScheme.termFrequency));
+        assertEquals(1.0, nGramProfileCosineNormalizedTermFrequency("Please", "Please"));
     }
 
     @Test
-    public void testQGram() {
+    void testQGram() {
         // ("hall", "allo", "llow", "lowe", "lowo")
         // str1: "hallowe" -> "hall", "allo", "llow", "lowe" -> (1, 1, 1, 1, 0)
         // str2: "hallowo" -> "hall", "allo", "llow", "lowo" -> (1, 1, 1, 0, 1)
@@ -99,7 +99,7 @@ public class SimilarityTest {
     }
 
     @Test
-    public void testLCS(){
+    void testLCS(){
         // str1 is  "Please divide this Sentence, into Tokens or nGrams or Shingles"            => 62 Characters
         // str2 is  "Please do not divide this sentence, into Tokens or nGrams or shingles"     => 69 Characters
         // LCS is   "Please divide this entence, into Tokens or nGrams or hingles"              => 60 Characters
@@ -109,7 +109,7 @@ public class SimilarityTest {
 
 
     @Test
-    public void testWinnowing(){
+    void testWinnowing(){
 
         // TODO: check this test case
 
@@ -123,7 +123,7 @@ public class SimilarityTest {
     }
 
     @Test
-    public void testNGramSimilarityKondrak05(){
+    void testNGramSimilarityKondrak05(){
         System.out.println(nGramSimilarityKondrak05(str1, str2));
         System.out.println(nGramSimilarityKondrak05(s1, s2));
         System.out.println(nGramSimilarityKondrak05(t1, t2));
@@ -137,13 +137,13 @@ public class SimilarityTest {
     }
 
     @Test
-    public void testOptimalStringAlignment() {
+    void testOptimalStringAlignment() {
         assertEquals(1.0, optimalAlignment("", ""), DELTA_MAX);
         assertEquals(0.75, optimalAlignment("paul", "pual"), DELTA_MAX);
     }
 
     @Test
-    public void testLongestCommonSubsequence() {
+    void testLongestCommonSubsequence() {
         assertEquals(1.0, longestCommonSubsequence("", ""), DELTA_MAX);
         assertEquals(0.75, longestCommonSubsequence("paul", "pual"), DELTA_MAX);
     }

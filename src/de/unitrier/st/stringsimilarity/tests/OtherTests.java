@@ -3,12 +3,12 @@ package de.unitrier.st.stringsimilarity.tests;
 import org.junit.jupiter.api.Test;
 
 import static de.unitrier.st.stringsimilarity.edit.Base.*;
-import static de.unitrier.st.stringsimilarity.edit.Variants.shingleFingerprintLongestCommonSubsequence;
+import static de.unitrier.st.stringsimilarity.edit.Variants.twoShingleFingerprintLongestCommonSubsequence;
 import static de.unitrier.st.stringsimilarity.fingerprint.Variants.winnowingNGramDice;
-import static de.unitrier.st.stringsimilarity.set.Variants.nGramJaccard;
+import static de.unitrier.st.stringsimilarity.set.Variants.quatGramJaccard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OtherTests {
+class OtherTests {
     // TODO: merge these tests into other test suites?
 
     @Test
@@ -44,17 +44,16 @@ public class OtherTests {
 
     @Test
     void testNGramFunction(){
-        double sim = nGramJaccard(
+        double sim = quatGramJaccard(
                 "Hallo Welt", // -> "Hall", "allo", "llo ", "lo W", "o We", " Wel", "Welt"
-                "Hallo Wlt", // -> "Hall", "allo", "llo ", "lo W", "o Wl", "o Wlt"
-                4); // -> Union: 9, Intersection: 4 -> 4/9=0.444...
+                "Hallo Wlt"); // -> "Hall", "allo", "llo ", "lo W", "o Wl", "o Wlt"
+                // -> Union: 9, Intersection: 4 -> 4/9=0.444...
         assertEquals(4.0/9, sim);
     }
 
     @Test
     void testQGramShingleFunction(){
-        double sim = shingleFingerprintLongestCommonSubsequence("Hello my world","Hello my beloved world",
-                2);
+        double sim = twoShingleFingerprintLongestCommonSubsequence("Hello my world","Hello my beloved world");
         assertEquals(1.0/3, sim);
     }
 
@@ -62,7 +61,7 @@ public class OtherTests {
     void testJaccardFunction(){
         String s1 = "Hallo Du";
         String s2 = "Hallo Sie";
-        double sim = nGramJaccard(s1, s2, 4);
+        double sim = quatGramJaccard(s1, s2);
         //     "Hall" - "allo" - "llo " - "lo D"  - "o Du" - "lo S" - "o Si" - " Sie"
         // s1:   1         1       1        1          1        0        0        0
         // s2:   1         1       1        0          0        1        1        1

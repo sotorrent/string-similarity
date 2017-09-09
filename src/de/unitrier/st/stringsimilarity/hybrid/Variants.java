@@ -2,17 +2,19 @@ package de.unitrier.st.stringsimilarity.hybrid;
 
 import com.google.common.collect.Sets;
 import de.unitrier.st.stringsimilarity.Normalization;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
+import static de.unitrier.st.stringsimilarity.fingerprint.Base.WINNOWING_WINDOW_SIZE;
 import static de.unitrier.st.stringsimilarity.fingerprint.Base.fingerprintList;
-import static de.unitrier.st.stringsimilarity.fingerprint.Variants.WINNOWING_WINDOW_SIZE;
 
 /*
  * Hybrid similarity metrics.
- * All metrics should return a value between 0.0 and 1.0.
+ *
+ * All metric variants must be a BiFunction<String, String, Double> and return a value between 0.0 and 1.0.
  */
 public class Variants {
 
@@ -31,6 +33,6 @@ public class Variants {
         // TODO: compute qGram similarity or Levenshtein similarity for matching raw string
         // TODO: combine dice of sets (winnowing) with edit-based similarity of matching blocks
 
-        return 0.0;
+        throw new NotImplementedException();
     }
 }
