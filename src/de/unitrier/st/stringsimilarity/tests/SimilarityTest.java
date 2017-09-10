@@ -5,12 +5,11 @@ import org.junit.jupiter.api.Test;
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
 import static de.unitrier.st.stringsimilarity.edit.Variants.*;
 import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
-import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingShingleDice;
+import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNShingleDice;
 import static de.unitrier.st.stringsimilarity.profile.Default.cosineNGramNormalizedBool;
 import static de.unitrier.st.stringsimilarity.profile.Default.cosineNGramNormalizedTermFrequency;
 import static de.unitrier.st.stringsimilarity.profile.Default.manhattanNGramNormalized;
 import static de.unitrier.st.stringsimilarity.set.Default.*;
-import static de.unitrier.st.stringsimilarity.set.Variants.nGramSimilarityKondrak05;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SimilarityTest {
@@ -47,13 +46,13 @@ class SimilarityTest {
     @Test
     void testSetBased(){
         assertEquals(15./24, nGramJaccard(s1,s2), DELTA_MAX);
-        assertEquals(3./15, shingleJaccard(str1,str2), DELTA_MAX);
+        assertEquals(3./15, nShingleJaccard(str1,str2), DELTA_MAX);
 
         assertEquals(2*15./(18+21), nGramDice(s1,s2), DELTA_MAX);
-        assertEquals(2*3./(8+10), shingleDice(str1,str2), DELTA_MAX);
+        assertEquals(2*3./(8+10), nShingleDice(str1,str2), DELTA_MAX);
 
         assertEquals(15./18, nGramOverlap(s1,s2), DELTA_MAX);
-        assertEquals(3./8, shingleOverlap(str1,str2), DELTA_MAX);
+        assertEquals(3./8, nShingleOverlap(str1,str2), DELTA_MAX);
     }
 
     @Test
@@ -119,7 +118,7 @@ class SimilarityTest {
 
         // fingerprints for s1: [-1791658002]
         // fingerprints for s2: [-1724834244]
-        assertEquals(2*0.0/(1+1), winnowingShingleDice(s1,s2), DELTA_MAX);
+        assertEquals(2*0.0/(1+1), winnowingNShingleDice(s1,s2), DELTA_MAX);
     }
 
     @Test

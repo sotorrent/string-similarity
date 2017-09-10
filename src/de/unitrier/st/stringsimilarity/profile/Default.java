@@ -41,16 +41,16 @@ public class Default {
     }
 
     // shingles
-    public static double cosineShingleNormalizedBool(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, WeightingScheme.BOOL);
+    public static double cosineNShingleNormalizedBool(String str1, String str2) {
+        return cosineNShingleNormalized(str1, str2, WeightingScheme.BOOL);
     }
 
-    public static double cosineShingleNormalizedTermFrequency(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, WeightingScheme.TERM_FREQUENCY);
+    public static double cosineNShingleNormalizedTermFrequency(String str1, String str2) {
+        return cosineNShingleNormalized(str1, str2, WeightingScheme.TERM_FREQUENCY);
     }
 
-    public static double cosineShingleNormalizedNormalizedTermFrequency(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, WeightingScheme.NORMALIZED_TERM_FREQUENCY);
+    public static double cosineNShingleNormalizedNormalizedTermFrequency(String str1, String str2) {
+        return cosineNShingleNormalized(str1, str2, WeightingScheme.NORMALIZED_TERM_FREQUENCY);
     }
 
 
@@ -62,8 +62,8 @@ public class Default {
     }
 
     // shingles
-    public static double manhattanShingleNormalized(String str1, String str2) {
-        return Base.manhattanShingleNormalized(str1, str2, SHINGLE_SIZE);
+    public static double manhattanNShingleNormalized(String str1, String str2) {
+        return Base.manhattanNShingleNormalized(str1, str2, SHINGLE_SIZE);
     }
 
 }

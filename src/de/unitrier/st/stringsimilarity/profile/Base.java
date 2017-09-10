@@ -122,15 +122,15 @@ public class Base {
     }
 
     // shingles
-    static double cosineShingleNormalized(String str1, String str2, int shingleSize, WeightingScheme weightingScheme) {
+    static double cosineNShingleNormalized(String str1, String str2, int shingleSize, WeightingScheme weightingScheme) {
         Multiset<String> shingleMultiset1 = shingleMultiset(tokens(normalizeForShingle(str1)), shingleSize);
         Multiset<String> shingleMultiset2 = shingleMultiset(tokens(normalizeForShingle(str2)), shingleSize);
 
         return cosine(shingleMultiset1, shingleMultiset2, weightingScheme);
     }
 
-    static double cosineShingleNormalized(String str1, String str2, WeightingScheme weightingScheme) {
-        return cosineShingleNormalized(str1, str2, SHINGLE_SIZE, weightingScheme);
+    static double cosineNShingleNormalized(String str1, String str2, WeightingScheme weightingScheme) {
+        return cosineNShingleNormalized(str1, str2, SHINGLE_SIZE, weightingScheme);
     }
 
     /*
@@ -188,7 +188,7 @@ public class Base {
     }
 
     // shingles
-    static double manhattanShingleNormalized(String str1, String str2, int shingleSize) {
+    static double manhattanNShingleNormalized(String str1, String str2, int shingleSize) {
         Multiset<String> shingleMultiset1 = shingleMultiset(tokens(normalizeForShingle(str1)), shingleSize);
         Multiset<String> shingleMultiset2 = shingleMultiset(tokens(normalizeForShingle(str2)), shingleSize);
 

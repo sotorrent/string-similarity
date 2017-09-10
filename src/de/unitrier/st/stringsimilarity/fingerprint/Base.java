@@ -81,8 +81,8 @@ public class Base {
      */
 
     // tokens
-    static double winnowingSimilarityToken(String str1, String str2,
-                                                  BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
+    static double winnowingTokenSimilarity(String str1, String str2,
+                                           BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(tokens(str1), WINNOWING_WINDOW_SIZE)
         );
@@ -95,8 +95,8 @@ public class Base {
     }
 
     // tokens + normalization
-    static double winnowingSimilarityTokenNormalized(String str1, String str2,
-                                                            BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
+    static double winnowingTokenSimilarityNormalized(String str1, String str2,
+                                                     BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(tokens(normalizeForEdit(str1)), WINNOWING_WINDOW_SIZE)
         );
@@ -146,8 +146,8 @@ public class Base {
      */
 
     // shingles
-    static double winnowingShingleSimilarity(String str1, String str2, int shingleSize,
-                                             BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
+    static double winnowingNShingleSimilarity(String str1, String str2, int shingleSize,
+                                              BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(shingleList(tokens(str1), shingleSize), WINNOWING_WINDOW_SIZE)
         );
@@ -160,8 +160,8 @@ public class Base {
     }
 
     // shingles + normalization
-    static double winnowingShingleSimilarityNormalized(String str1, String str2, int shingleSize,
-                                                       BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
+    static double winnowingNShingleSimilarityNormalized(String str1, String str2, int shingleSize,
+                                                        BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize), WINNOWING_WINDOW_SIZE)
         );

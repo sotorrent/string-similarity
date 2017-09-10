@@ -1,7 +1,7 @@
 package de.unitrier.st.stringsimilarity.edit;
 
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
-import static de.unitrier.st.stringsimilarity.edit.Base.shingleFingerprintOptimalAlignment;
+import static de.unitrier.st.stringsimilarity.edit.Base.nShingleFingerprintOptimalAlignment;
 
 /*
  * Different variants of edit-based similarity metrics.
@@ -85,20 +85,20 @@ public class Variants {
 
     // shingles + fingerprints
     public static double twoShingleFingerprintOptimalAlignment(String str1, String str2) {
-        return shingleFingerprintOptimalAlignment(str1, str2, 2);
+        return nShingleFingerprintOptimalAlignment(str1, str2, 2);
     }
 
     public static double threeShingleFingerprintOptimalAlignment(String str1, String str2) {
-        return shingleFingerprintOptimalAlignment(str1, str2, 3);
+        return nShingleFingerprintOptimalAlignment(str1, str2, 3);
     }
 
     // shingles + fingerprints + normalization
     public static double twoShingleFingerprintOptimalAlignmentNormalized(String str1, String str2) {
-        return Base.shingleFingerprintOptimalAlignmentNormalized(str1, str2, 2);
+        return Base.nShingleFingerprintOptimalAlignmentNormalized(str1, str2, 2);
     }
 
     public static double threeShingleFingerprintOptimalAlignmentNormalized(String str1, String str2) {
-        return Base.shingleFingerprintOptimalAlignmentNormalized(str1, str2, 3);
+        return Base.nShingleFingerprintOptimalAlignmentNormalized(str1, str2, 3);
     }
 
 
@@ -151,20 +151,20 @@ public class Variants {
 
     // shingles + fingerprints
     public static double twoShingleFingerprintLongestCommonSubsequence(String str1, String str2) {
-        return Base.shingleFingerprintLongestCommonSubsequence(str1, str2, 2);
+        return Base.nShingleFingerprintLongestCommonSubsequence(str1, str2, 2);
     }
 
     public static double threeShingleFingerprintLongestCommonSubsequence(String str1, String str2) {
-        return Base.shingleFingerprintLongestCommonSubsequence(str1, str2, 3);
+        return Base.nShingleFingerprintLongestCommonSubsequence(str1, str2, 3);
     }
 
     // shingles + fingerprints + normalization
     public static double twoShingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2) {
-        return Base.shingleFingerprintLongestCommonSubsequenceNormalized(str1, str2, 2);
+        return Base.nShingleFingerprintLongestCommonSubsequenceNormalized(str1, str2, 2);
     }
 
     public static double threeShingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2) {
-        return Base.shingleFingerprintLongestCommonSubsequenceNormalized(str1, str2, 2);
+        return Base.nShingleFingerprintLongestCommonSubsequenceNormalized(str1, str2, 2);
     }
 
 }

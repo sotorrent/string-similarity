@@ -39,18 +39,18 @@ public class Tokenization {
 
     // ********** NGRAMS **********
 
-    public static List<String> nGramList(String str, int n, boolean padding) {
+    public static List<String> nGramList(String str, int nGramSize, boolean padding) {
         final String finalStr; // for lambda expression
         final int length;
 
         if (padding) {
-            length = str.length()+2*(n-1);
+            length = str.length()+2*(nGramSize-1);
             StringBuilder strPadding = new StringBuilder(length);
-            for (int i=0; i<n-1; i++) {
+            for (int i=0; i<nGramSize-1; i++) {
                 strPadding.append(PADDING_CHAR);
             }
             strPadding.append(str);
-            for (int i=0; i<n-1; i++) {
+            for (int i=0; i<nGramSize-1; i++) {
                 strPadding.append(PADDING_CHAR);
             }
             finalStr = strPadding.toString();
@@ -60,13 +60,13 @@ public class Tokenization {
         }
 
         return IntStream
-                .range(0, length-n+1)
-                .mapToObj(currentStartPos -> finalStr.substring(currentStartPos, currentStartPos+n))
+                .range(0, length-nGramSize+1)
+                .mapToObj(currentStartPos -> finalStr.substring(currentStartPos, currentStartPos+nGramSize))
                 .collect(Collectors.toList());
     }
 
-    public static List<String> nGramList(String str, int n) {
-        return nGramList(str, n, false);
+    public static List<String> nGramList(String str, int nGramSize) {
+        return nGramList(str, nGramSize, false);
     }
 
     public static List<String> nGramList(String str, boolean padding) {
@@ -77,15 +77,15 @@ public class Tokenization {
         return nGramList(str, NGRAM_SIZE);
     }
 
-    public static Multiset<String> nGramMultiset(String str, int n, boolean padding) {
-        return nGramList(str, n, padding)
+    public static Multiset<String> nGramMultiset(String str, int nGramSize, boolean padding) {
+        return nGramList(str, nGramSize, padding)
                 .stream()
                 .collect(MultisetCollector.toMultiset());
     }
 
     // see: https://en.wikipedia.org/wiki/Bag-of-words_model
-    public static Multiset<String> nGramMultiset(String str, int n) {
-        return nGramMultiset(str, n, false);
+    public static Multiset<String> nGramMultiset(String str, int nGramSize) {
+        return nGramMultiset(str, nGramSize, false);
     }
 
     public static Multiset<String> nGramMultiset(String str) {
@@ -96,12 +96,12 @@ public class Tokenization {
         return nGramMultiset(str, NGRAM_SIZE, padding);
     }
 
-    public static Set<String> nGramSet(String str, int n, boolean padding) {
-        return nGramMultiset(str, n, padding).elementSet();
+    public static Set<String> nGramSet(String str, int nGramSize, boolean padding) {
+        return nGramMultiset(str, nGramSize, padding).elementSet();
     }
 
-    public static Set<String> nGramSet(String str, int n) {
-        return nGramMultiset(str, n).elementSet();
+    public static Set<String> nGramSet(String str, int nGramSize) {
+        return nGramMultiset(str, nGramSize).elementSet();
     }
 
     public static Set<String> nGramSet(String str, boolean padding) {

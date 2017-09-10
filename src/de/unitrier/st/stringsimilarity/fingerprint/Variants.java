@@ -267,104 +267,104 @@ public class Variants {
 
     // shingles + dice
     public static double winnowingTwoShingleDice(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, 2,
+        return Base.winnowingNShingleSimilarity(str1, str2, 2,
                 de.unitrier.st.stringsimilarity.set.Base::dice
         );
     }
 
     public static double winnowingThreeShingleDice(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, 3,
+        return Base.winnowingNShingleSimilarity(str1, str2, 3,
                 de.unitrier.st.stringsimilarity.set.Base::dice
         );
     }
 
     // shingles + dice + normalization
     public static double winnowingTwoShingleDiceNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, 2,
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, 2,
                 de.unitrier.st.stringsimilarity.set.Base::dice
         );
     }
 
     public static double winnowingThreeShingleDiceNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, 3,
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, 3,
                 de.unitrier.st.stringsimilarity.set.Base::dice
         );
     }
 
     // shingles + dice variant
     public static double winnowingTwoShingleDiceVariant(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, 2,
+        return Base.winnowingNShingleSimilarity(str1, str2, 2,
                 de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
     }
 
     public static double winnowingThreeShingleDiceVariant(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, 3,
+        return Base.winnowingNShingleSimilarity(str1, str2, 3,
                 de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
     }
 
     // shingles + dice variant + normalization
     public static double winnowingTwoShingleDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, 2,
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, 2,
                 de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
     }
 
     public static double winnowingThreeShingleDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, 3,
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, 3,
                 de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
     }
 
     // shingles + jaccard
     public static double winnowingTwoShingleJaccard(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, 2,
+        return Base.winnowingNShingleSimilarity(str1, str2, 2,
                 de.unitrier.st.stringsimilarity.set.Base::jaccard
         );
     }
 
     public static double winnowingThreeShingleJaccard(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, 3,
+        return Base.winnowingNShingleSimilarity(str1, str2, 3,
                 de.unitrier.st.stringsimilarity.set.Base::jaccard
         );
     }
 
     // shingles + jaccard + normalization
     public static double winnowingTwoShingleJaccardNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, 2,
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, 2,
                 de.unitrier.st.stringsimilarity.set.Base::jaccard
         );
     }
 
     public static double winnowingThreeShingleJaccardNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, 3,
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, 3,
                 de.unitrier.st.stringsimilarity.set.Base::jaccard
         );
     }
 
     // shingles + overlap
     public static double winnowingTwoShingleOverlap(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, 2,
+        return Base.winnowingNShingleSimilarity(str1, str2, 2,
                 de.unitrier.st.stringsimilarity.set.Base::overlap
         );
     }
 
     public static double winnowingThreeShingleOverlap(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, 3,
+        return Base.winnowingNShingleSimilarity(str1, str2, 3,
                 de.unitrier.st.stringsimilarity.set.Base::overlap
         );
     }
 
     // shingles + overlap + normalization
     public static double winnowingTwoShingleOverlapNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, 2,
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, 2,
                 de.unitrier.st.stringsimilarity.set.Base::overlap
         );
     }
 
     public static double winnowingThreeShingleOverlapNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, 3,
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, 3,
                 de.unitrier.st.stringsimilarity.set.Base::overlap
         );
     }

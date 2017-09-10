@@ -18,42 +18,42 @@ public class Default {
 
     // tokens + dice
     public static double winnowingTokenDice(String str1, String str2) {
-        return Base.winnowingSimilarityToken(str1, str2, de.unitrier.st.stringsimilarity.set.Base::dice);
+        return Base.winnowingTokenSimilarity(str1, str2, de.unitrier.st.stringsimilarity.set.Base::dice);
     }
 
     // tokens + dice + normalization
     public static double winnowingTokenDiceNormalized(String str1, String str2) {
-        return Base.winnowingSimilarityTokenNormalized(str1, str2, de.unitrier.st.stringsimilarity.set.Base::dice);
+        return Base.winnowingTokenSimilarityNormalized(str1, str2, de.unitrier.st.stringsimilarity.set.Base::dice);
     }
 
     // tokens + dice variant
     public static double winnowingTokenDiceVariant(String str1, String str2) {
-        return Base.winnowingSimilarityToken(str1, str2, de.unitrier.st.stringsimilarity.set.Base::diceVariant);
+        return Base.winnowingTokenSimilarity(str1, str2, de.unitrier.st.stringsimilarity.set.Base::diceVariant);
     }
 
     // tokens + dice variant + normalization
     public static double winnowingTokenDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingSimilarityTokenNormalized(str1, str2, de.unitrier.st.stringsimilarity.set.Base::diceVariant);
+        return Base.winnowingTokenSimilarityNormalized(str1, str2, de.unitrier.st.stringsimilarity.set.Base::diceVariant);
     }
 
     // tokens + jaccard
     public static double winnowingTokenJaccard(String str1, String str2) {
-        return Base.winnowingSimilarityToken(str1, str2, de.unitrier.st.stringsimilarity.set.Base::jaccard);
+        return Base.winnowingTokenSimilarity(str1, str2, de.unitrier.st.stringsimilarity.set.Base::jaccard);
     }
 
     // tokens + jaccard + normalization
     public static double winnowingTokenJaccardNormalized(String str1, String str2) {
-        return Base.winnowingSimilarityTokenNormalized(str1, str2, de.unitrier.st.stringsimilarity.set.Base::jaccard);
+        return Base.winnowingTokenSimilarityNormalized(str1, str2, de.unitrier.st.stringsimilarity.set.Base::jaccard);
     }
 
     // tokens + overlap
     public static double winnowingTokenOverlap(String str1, String str2) {
-        return Base.winnowingSimilarityToken(str1, str2, de.unitrier.st.stringsimilarity.set.Base::overlap);
+        return Base.winnowingTokenSimilarity(str1, str2, de.unitrier.st.stringsimilarity.set.Base::overlap);
     }
 
     // tokens + overlap + normalization
     public static double winnowingTokenOverlapNormalized(String str1, String str2) {
-        return Base.winnowingSimilarityTokenNormalized(str1, str2, de.unitrier.st.stringsimilarity.set.Base::overlap);
+        return Base.winnowingTokenSimilarityNormalized(str1, str2, de.unitrier.st.stringsimilarity.set.Base::overlap);
     }
 
 
@@ -123,57 +123,57 @@ public class Default {
     */
 
     // shingles + dice
-    public static double winnowingShingleDice(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, SHINGLE_SIZE,
+    public static double winnowingNShingleDice(String str1, String str2) {
+        return Base.winnowingNShingleSimilarity(str1, str2, SHINGLE_SIZE,
                 de.unitrier.st.stringsimilarity.set.Base::dice
         );
     }
 
     // shingles + dice + normalization
-    public static double winnowingShingleDiceNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE,
+    public static double winnowingNShingleDiceNormalized(String str1, String str2) {
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE,
                 de.unitrier.st.stringsimilarity.set.Base::dice
         );
     }
 
     // shingles + dice variant
-    public static double winnowingShingleDiceVariant(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, SHINGLE_SIZE,
+    public static double winnowingNShingleDiceVariant(String str1, String str2) {
+        return Base.winnowingNShingleSimilarity(str1, str2, SHINGLE_SIZE,
                 de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
     }
 
     // shingles + dice variant + normalization
-    public static double winnowingShingleDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE,
+    public static double winnowingNShingleDiceVariantNormalized(String str1, String str2) {
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE,
                 de.unitrier.st.stringsimilarity.set.Base::diceVariant
         );
     }
 
     // shingles + jaccard
-    public static double winnowingShingleJaccard(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, SHINGLE_SIZE,
+    public static double winnowingNShingleJaccard(String str1, String str2) {
+        return Base.winnowingNShingleSimilarity(str1, str2, SHINGLE_SIZE,
                 de.unitrier.st.stringsimilarity.set.Base::jaccard
         );
     }
 
     // shingles + jaccard + normalization
-    public static double winnowingShingleJaccardNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE,
+    public static double winnowingNShingleJaccardNormalized(String str1, String str2) {
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE,
                 de.unitrier.st.stringsimilarity.set.Base::jaccard
         );
     }
 
     // shingles + overlap
-    public static double winnowingShingleOverlap(String str1, String str2) {
-        return Base.winnowingShingleSimilarity(str1, str2, SHINGLE_SIZE,
+    public static double winnowingNShingleOverlap(String str1, String str2) {
+        return Base.winnowingNShingleSimilarity(str1, str2, SHINGLE_SIZE,
                 de.unitrier.st.stringsimilarity.set.Base::overlap
         );
     }
 
     // shingles + overlap + normalization
-    public static double winnowingShingleOverlapNormalized(String str1, String str2) {
-        return Base.winnowingShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE,
+    public static double winnowingNShingleOverlapNormalized(String str1, String str2) {
+        return Base.winnowingNShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE,
                 de.unitrier.st.stringsimilarity.set.Base::overlap
         );
     }

@@ -1,5 +1,7 @@
 package de.unitrier.st.stringsimilarity.set;
 
+import org.apache.lucene.search.spell.NGramDistance;
+
 import static de.unitrier.st.stringsimilarity.set.Base.*;
 
 /*
@@ -8,6 +10,11 @@ import static de.unitrier.st.stringsimilarity.set.Base.*;
  * All metric variants must be a BiFunction<String, String, Double> and return a value between 0.0 and 1.0.
  */
 public class Variants {
+
+    private static NGramDistance twoGramDistance = new NGramDistance(2);
+    private static NGramDistance threeGramDistance = new NGramDistance(3);
+    private static NGramDistance fourGramDistance = new NGramDistance(4);
+    private static NGramDistance fiveGramDistance = new NGramDistance(5);
 
     // ********** JACCARD **********
 
@@ -74,20 +81,20 @@ public class Variants {
 
     // shingles
     public static double twoShingleJaccard(String str1, String str2) {
-        return shingleSimilarity(str1, str2, 2, Base::jaccard);
+        return nShingleSimilarity(str1, str2, 2, Base::jaccard);
     }
 
     public static double threeShingleJaccard(String str1, String str2) {
-        return shingleSimilarity(str1, str2, 3, Base::jaccard);
+        return nShingleSimilarity(str1, str2, 3, Base::jaccard);
     }
 
     // shingles + normalization
     public static double twoShingleJaccardNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, 2, Base::jaccard);
+        return nShingleSimilarityNormalized(str1, str2, 2, Base::jaccard);
     }
 
     public static double threeShingleJaccardNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, 3, Base::jaccard);
+        return nShingleSimilarityNormalized(str1, str2, 3, Base::jaccard);
     }
 
 
@@ -156,20 +163,20 @@ public class Variants {
 
     // shingles
     public static double twoShingleDice(String str1, String str2) {
-        return shingleSimilarity(str1, str2, 2, Base::dice);
+        return nShingleSimilarity(str1, str2, 2, Base::dice);
     }
 
     public static double threeShingleDice(String str1, String str2) {
-        return shingleSimilarity(str1, str2, 3, Base::dice);
+        return nShingleSimilarity(str1, str2, 3, Base::dice);
     }
 
     // shingles + normalization
     public static double twoShingleDiceNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, 2, Base::dice);
+        return nShingleSimilarityNormalized(str1, str2, 2, Base::dice);
     }
 
     public static double threeShingleDiceNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, 3, Base::dice);
+        return nShingleSimilarityNormalized(str1, str2, 3, Base::dice);
     }
 
 
@@ -238,20 +245,20 @@ public class Variants {
 
     // shingles
     public static double twoShingleDiceVariant(String str1, String str2) {
-        return shingleSimilarity(str1, str2, 2, Base::diceVariant);
+        return nShingleSimilarity(str1, str2, 2, Base::diceVariant);
     }
 
     public static double threeShingleDiceVariant(String str1, String str2) {
-        return shingleSimilarity(str1, str2, 3, Base::diceVariant);
+        return nShingleSimilarity(str1, str2, 3, Base::diceVariant);
     }
 
     // shingles + normalization
     public static double twoShingleDiceVariantNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, 2, Base::diceVariant);
+        return nShingleSimilarityNormalized(str1, str2, 2, Base::diceVariant);
     }
 
     public static double threeShingleDiceVariantNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, 3, Base::diceVariant);
+        return nShingleSimilarityNormalized(str1, str2, 3, Base::diceVariant);
     }
 
 
@@ -320,27 +327,38 @@ public class Variants {
 
     // shingles
     public static double twoShingleOverlap(String str1, String str2) {
-        return shingleSimilarity(str1, str2, 2, Base::overlap);
+        return nShingleSimilarity(str1, str2, 2, Base::overlap);
     }
 
     public static double threeShingleOverlap(String str1, String str2) {
-        return shingleSimilarity(str1, str2, 3, Base::overlap);
+        return nShingleSimilarity(str1, str2, 3, Base::overlap);
     }
 
     // shingles + normalization
     public static double twoShingleOverlapNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, 2, Base::overlap);
+        return nShingleSimilarityNormalized(str1, str2, 2, Base::overlap);
     }
 
     public static double threeShingleOverlapNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, 3, Base::overlap);
+        return nShingleSimilarityNormalized(str1, str2, 3, Base::overlap);
     }
 
 
     // ********** NGRAM SIMILARITY BASED ON KONDRAK05 **********
 
-    public static double nGramSimilarityKondrak05(String str1, String str2){
-        return Base.nGramSimilarityKondrak05(str1, str2);
+    public static double twoGramSimilarityKondrak05(String str1, String str2){
+        return twoGramDistance.getDistance(str1, str2);
     }
 
+    public static double threeGramSimilarityKondrak05(String str1, String str2){
+        return threeGramDistance.getDistance(str1, str2);
+    }
+
+    public static double fourGramSimilarityKondrak05(String str1, String str2){
+        return fourGramDistance.getDistance(str1, str2);
+    }
+
+    public static double fiveGramSimilarityKondrak05(String str1, String str2){
+        return fiveGramDistance.getDistance(str1, str2);
+    }
 }

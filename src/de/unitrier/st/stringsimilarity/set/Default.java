@@ -1,5 +1,7 @@
 package de.unitrier.st.stringsimilarity.set;
 
+import org.apache.lucene.search.spell.NGramDistance;
+
 import static de.unitrier.st.stringsimilarity.Tokenization.*;
 import static de.unitrier.st.stringsimilarity.set.Base.*;
 
@@ -9,6 +11,8 @@ import static de.unitrier.st.stringsimilarity.set.Base.*;
  * All metric variants must be a BiFunction<String, String, Double> and return a value between 0.0 and 1.0.
  */
 public class Default {
+    // needed for nGramSimilarityKondrak05
+    private static NGramDistance nGramDistance = new NGramDistance(NGRAM_SIZE);
 
     // ********** JACCARD **********
 
@@ -38,13 +42,13 @@ public class Default {
     }
 
     // shingles
-    public static double shingleJaccard(String str1, String str2) {
-        return shingleSimilarity(str1, str2, SHINGLE_SIZE, Base::jaccard);
+    public static double nShingleJaccard(String str1, String str2) {
+        return nShingleSimilarity(str1, str2, SHINGLE_SIZE, Base::jaccard);
     }
 
     // shingles + normalization
-    public static double shingleJaccardNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::jaccard);
+    public static double nShingleJaccardNormalized(String str1, String str2) {
+        return nShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::jaccard);
     }
 
 
@@ -76,13 +80,13 @@ public class Default {
     }
 
     // shingles
-    public static double shingleDice(String str1, String str2) {
-        return shingleSimilarity(str1, str2, SHINGLE_SIZE, Base::dice);
+    public static double nShingleDice(String str1, String str2) {
+        return nShingleSimilarity(str1, str2, SHINGLE_SIZE, Base::dice);
     }
 
     // shingles + normalization
-    public static double shingleDiceNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::dice);
+    public static double nShingleDiceNormalized(String str1, String str2) {
+        return nShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::dice);
     }
 
 
@@ -114,13 +118,13 @@ public class Default {
     }
 
     // shingles
-    public static double shingleDiceVariant(String str1, String str2) {
-        return shingleSimilarity(str1, str2, SHINGLE_SIZE, Base::diceVariant);
+    public static double nShingleDiceVariant(String str1, String str2) {
+        return nShingleSimilarity(str1, str2, SHINGLE_SIZE, Base::diceVariant);
     }
 
     // shingles + normalization
-    public static double shingleDiceVariantNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::dice);
+    public static double nShingleDiceVariantNormalized(String str1, String str2) {
+        return nShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::dice);
     }
 
     // ********** OVERLAP **********
@@ -151,13 +155,17 @@ public class Default {
     }
 
     // shingles
-    public static double shingleOverlap(String str1, String str2) {
-        return shingleSimilarity(str1, str2, SHINGLE_SIZE, Base::overlap);
+    public static double nShingleOverlap(String str1, String str2) {
+        return nShingleSimilarity(str1, str2, SHINGLE_SIZE, Base::overlap);
     }
 
     // shingles + normalization
-    public static double shingleOverlapNormalized(String str1, String str2) {
-        return shingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::overlap);
+    public static double nShingleOverlapNormalized(String str1, String str2) {
+        return nShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::overlap);
+    }
+
+    public static double nGramSimilarityKondrak05(String str1, String str2){
+        return nGramDistance.getDistance(str1, str2);
     }
 
 }

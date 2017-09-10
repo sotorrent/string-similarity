@@ -23,12 +23,12 @@ public class Default {
 
     // shingles + fingerprints
     public static double nShingleFingerprintOptimalAlignment(String str1, String str2) {
-        return Base.shingleFingerprintOptimalAlignment(str1, str2, SHINGLE_SIZE);
+        return Base.nShingleFingerprintOptimalAlignment(str1, str2, SHINGLE_SIZE);
     }
 
     // shingles + fingerprints + normalization
     public static double nShingleFingerprintOptimalAlignmentNormalized(String str1, String str2) {
-        return Base.shingleFingerprintOptimalAlignmentNormalized(str1, str2, SHINGLE_SIZE);
+        return Base.nShingleFingerprintOptimalAlignmentNormalized(str1, str2, SHINGLE_SIZE);
     }
 
 
@@ -47,13 +47,13 @@ public class Default {
     }
 
     // shingles + fingerprints
-    public static double shingleFingerprintLongestCommonSubsequence(String str1, String str2) {
-        return Base.shingleFingerprintLongestCommonSubsequence(str1, str2, SHINGLE_SIZE);
+    public static double nShingleFingerprintLongestCommonSubsequence(String str1, String str2) {
+        return Base.nShingleFingerprintLongestCommonSubsequence(str1, str2, SHINGLE_SIZE);
     }
 
     // shingles + fingerprints + normalization
-    public static double shingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2) {
-        return Base.shingleFingerprintLongestCommonSubsequenceNormalized(str1, str2, SHINGLE_SIZE);
+    public static double nShingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2) {
+        return Base.nShingleFingerprintLongestCommonSubsequenceNormalized(str1, str2, SHINGLE_SIZE);
     }
 
 }

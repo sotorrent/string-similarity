@@ -77,27 +77,27 @@ public class Variants {
 
     // shingles
     public static double cosineTwoShingleNormalizedBool(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, 2, Base.WeightingScheme.BOOL);
+        return cosineNShingleNormalized(str1, str2, 2, Base.WeightingScheme.BOOL);
     }
 
     public static double cosineTwoShingleNormalizedTermFrequency(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, 2, Base.WeightingScheme.TERM_FREQUENCY);
+        return cosineNShingleNormalized(str1, str2, 2, Base.WeightingScheme.TERM_FREQUENCY);
     }
 
     public static double cosineTwoShingleNormalizedNormalizedTermFrequency(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, 2, Base.WeightingScheme.NORMALIZED_TERM_FREQUENCY);
+        return cosineNShingleNormalized(str1, str2, 2, Base.WeightingScheme.NORMALIZED_TERM_FREQUENCY);
     }
 
     public static double cosineThreeShingleNormalizedBool(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, 3, Base.WeightingScheme.BOOL);
+        return cosineNShingleNormalized(str1, str2, 3, Base.WeightingScheme.BOOL);
     }
 
     public static double cosineThreeShingleNormalizedTermFrequency(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, 3, Base.WeightingScheme.TERM_FREQUENCY);
+        return cosineNShingleNormalized(str1, str2, 3, Base.WeightingScheme.TERM_FREQUENCY);
     }
 
     public static double cosineThreeShingleNormalizedNormalizedTermFrequency(String str1, String str2) {
-        return cosineShingleNormalized(str1, str2, 3, Base.WeightingScheme.NORMALIZED_TERM_FREQUENCY);
+        return cosineNShingleNormalized(str1, str2, 3, Base.WeightingScheme.NORMALIZED_TERM_FREQUENCY);
     }
 
 
@@ -127,11 +127,11 @@ public class Variants {
 
     // shingles
     public static double manhattanTwoShingleNormalized(String str1, String str2) {
-        return manhattanShingleNormalized(str1, str2, 2);
+        return manhattanNShingleNormalized(str1, str2, 2);
     }
 
     public static double manhattanThreeShingleNormalized(String str1, String str2) {
-        return manhattanShingleNormalized(str1, str2, 3);
+        return manhattanNShingleNormalized(str1, str2, 3);
     }
 
 }

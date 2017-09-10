@@ -23,8 +23,6 @@ public class Base {
 
     public static final double THRESHOLD = 0.6; // TODO: set after evaluation
 
-    private static NGramDistance ngramDistance = new NGramDistance();
-
     /**
      * Convert a list to a set.
      * This is needed, because tokens() return a list of tokens, but the set-based metrics need a set of tokens.
@@ -107,46 +105,46 @@ public class Base {
     }
 
     // ngrams
-    static double nGramSimilarity(String str1, String str2, int n,
+    static double nGramSimilarity(String str1, String str2, int nGramSize,
                                   BiFunction<Set<String>, Set<String>, Double> coefficient) {
-        Set<String> nGramSet1 = nGramSet( str1, n);
-        Set<String> nGramSet2 = nGramSet(str2, n);
+        Set<String> nGramSet1 = nGramSet(str1, nGramSize);
+        Set<String> nGramSet2 = nGramSet(str2, nGramSize);
 
         return coefficient.apply(nGramSet1, nGramSet2);
     }
 
     // ngrams + normalization
-    static double nGramSimilarityNormalized(String str1, String str2, int n,
+    static double nGramSimilarityNormalized(String str1, String str2, int nGramSize,
                                             BiFunction<Set<String>, Set<String>, Double> coefficient) {
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n);
+        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), nGramSize);
+        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), nGramSize);
 
         return coefficient.apply(nGramSet1, nGramSet2);
     }
 
     // ngrams + normalization + padding
-    static double nGramSimilarityNormalizedPadding(String str1, String str2, int n,
+    static double nGramSimilarityNormalizedPadding(String str1, String str2, int nGramSize,
                                                    BiFunction<Set<String>, Set<String>, Double> coefficient) {
-        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), n, true);
-        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), n, true);
+        Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), nGramSize, true);
+        Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), nGramSize, true);
 
         return coefficient.apply(nGramSet1, nGramSet2);
     }
 
     // shingles
-    static double shingleSimilarity(String str1, String str2, int n,
-                                    BiFunction<Set<String>, Set<String>, Double> coefficient) {
-        Set<String> shingleSet1 = shingleSet(tokens(str1), DEFAULT_SEPARATOR, n);
-        Set<String> shingleSet2 = shingleSet(tokens(str2), DEFAULT_SEPARATOR, n);
+    static double nShingleSimilarity(String str1, String str2, int shingleSize,
+                                     BiFunction<Set<String>, Set<String>, Double> coefficient) {
+        Set<String> shingleSet1 = shingleSet(tokens(str1), DEFAULT_SEPARATOR, shingleSize);
+        Set<String> shingleSet2 = shingleSet(tokens(str2), DEFAULT_SEPARATOR, shingleSize);
 
         return coefficient.apply(shingleSet1, shingleSet2);
     }
 
     // shingles + normalization
-    static double shingleSimilarityNormalized(String str1, String str2, int n,
-                                              BiFunction<Set<String>, Set<String>, Double> coefficient) {
-        Set<String> shingleSet1 = shingleSet(tokens(normalizeForShingle(str1)), DEFAULT_SEPARATOR, n);
-        Set<String> shingleSet2 = shingleSet(tokens(normalizeForShingle(str2)), DEFAULT_SEPARATOR, n);
+    static double nShingleSimilarityNormalized(String str1, String str2, int shingleSize,
+                                               BiFunction<Set<String>, Set<String>, Double> coefficient) {
+        Set<String> shingleSet1 = shingleSet(tokens(normalizeForShingle(str1)), DEFAULT_SEPARATOR, shingleSize);
+        Set<String> shingleSet2 = shingleSet(tokens(normalizeForShingle(str2)), DEFAULT_SEPARATOR, shingleSize);
 
         return coefficient.apply(shingleSet1, shingleSet2);
     }
@@ -155,7 +153,7 @@ public class Base {
     // ********** NGRAM SIMILARITY BASED ON KONDRAK05 **********
 
     // ngrams
-    static double nGramSimilarityKondrak05(String str1, String str2){
-        return ngramDistance.getDistance(str1, str2);
+    static double nGramSimilarityKondrak05(String str1, String str2, int nGramSize){
+        return new NGramDistance(nGramSize).getDistance(str1, str2);
     }
 }

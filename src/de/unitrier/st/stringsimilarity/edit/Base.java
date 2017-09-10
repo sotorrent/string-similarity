@@ -282,7 +282,7 @@ public class Base {
     }
 
     // shingles + fingerprints
-    static double shingleFingerprintOptimalAlignment(String str1, String str2, int shingleSize) {
+    static double nShingleFingerprintOptimalAlignment(String str1, String str2, int shingleSize) {
         return optimalAlignment(
                 fingerprintList(shingleList(tokens(str1), shingleSize)),
                 fingerprintList(shingleList(tokens(str2), shingleSize))
@@ -290,7 +290,7 @@ public class Base {
     }
 
     // shingles + fingerprints + normalization
-    static double shingleFingerprintOptimalAlignmentNormalized(String str1, String str2, int shingleSize) {
+    static double nShingleFingerprintOptimalAlignmentNormalized(String str1, String str2, int shingleSize) {
         return optimalAlignment(
                 fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
                 fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
@@ -388,7 +388,7 @@ public class Base {
     }
 
     // shingles + fingerprints
-    static double shingleFingerprintLongestCommonSubsequence(String str1, String str2, int shingleSize) {
+    static double nShingleFingerprintLongestCommonSubsequence(String str1, String str2, int shingleSize) {
         return longestCommonSubsequence(
                 fingerprintList(shingleList(tokens(str1), shingleSize)),
                 fingerprintList(shingleList(tokens(str2), shingleSize))
@@ -396,7 +396,7 @@ public class Base {
     }
 
     // shingles + fingerprints + normalization
-    static double shingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int shingleSize) {
+    static double nShingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int shingleSize) {
         return longestCommonSubsequence(
                 fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
                 fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
