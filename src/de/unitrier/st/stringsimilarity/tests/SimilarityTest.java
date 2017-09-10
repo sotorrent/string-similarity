@@ -123,9 +123,9 @@ class SimilarityTest {
 
     @Test
     void testNGramSimilarityKondrak05(){
-        System.out.println(nGramSimilarityKondrak05(str1, str2));
-        System.out.println(nGramSimilarityKondrak05(s1, s2));
-        System.out.println(nGramSimilarityKondrak05(t1, t2));
+        assertEquals(0.8659420013427734, nGramSimilarityKondrak05(str1, str2), DELTA_MAX);
+        assertEquals(0.8571428656578064, nGramSimilarityKondrak05(s1, s2), DELTA_MAX);
+        assertEquals(0.5246478915214539, nGramSimilarityKondrak05(t1, t2), DELTA_MAX);
 
         assertEquals(1.0, nGramSimilarityKondrak05(str1, str1), DELTA_MAX);
         assertEquals(1.0, nGramSimilarityKondrak05(str2, str2), DELTA_MAX);
