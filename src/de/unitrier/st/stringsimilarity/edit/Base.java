@@ -5,12 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
-import static de.unitrier.st.stringsimilarity.Normalization.normalizeForNGram;
-import static de.unitrier.st.stringsimilarity.Normalization.normalizeForShingle;
-import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
-import static de.unitrier.st.stringsimilarity.Tokenization.shingleList;
-import static de.unitrier.st.stringsimilarity.Tokenization.tokens;
-import static de.unitrier.st.stringsimilarity.fingerprint.Base.fingerprintList;
 
 /*
  * Edit-based similarity metrics.
@@ -265,38 +259,6 @@ public class Base {
         );
     }
 
-    // ngrams + fingerprints
-    static double nGramFingerprintOptimalAlignment(String str1, String str2, int nGramSize) {
-        return optimalAlignment(
-                fingerprintList(nGramList(str1, nGramSize)),
-                fingerprintList(nGramList(str2, nGramSize))
-        );
-    }
-
-    // ngrams + fingerprints + normalization
-    static double nGramFingerprintOptimalAlignmentNormalized(String str1, String str2, int nGramSize) {
-        return optimalAlignment(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize)),
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize))
-        );
-    }
-
-    // shingles + fingerprints
-    static double nShingleFingerprintOptimalAlignment(String str1, String str2, int shingleSize) {
-        return optimalAlignment(
-                fingerprintList(shingleList(tokens(str1), shingleSize)),
-                fingerprintList(shingleList(tokens(str2), shingleSize))
-        );
-    }
-
-    // shingles + fingerprints + normalization
-    static double nShingleFingerprintOptimalAlignmentNormalized(String str1, String str2, int shingleSize) {
-        return optimalAlignment(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
-        );
-    }
-
 
     /*
      * Similarity metric based on longest common subseqence.
@@ -371,35 +333,4 @@ public class Base {
         );
     }
 
-    // ngrams + fingerprints
-    static double nGramFingerprintLongestCommonSubsequence(String str1, String str2, int nGramSize) {
-        return longestCommonSubsequence(
-                fingerprintList(nGramList(str1), nGramSize),
-                fingerprintList(nGramList(str2), nGramSize)
-        );
-    }
-
-    // ngrams + fingerprints + normalization
-    static double nGramFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int nGramSize) {
-        return longestCommonSubsequence(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize)),
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize))
-        );
-    }
-
-    // shingles + fingerprints
-    static double nShingleFingerprintLongestCommonSubsequence(String str1, String str2, int shingleSize) {
-        return longestCommonSubsequence(
-                fingerprintList(shingleList(tokens(str1), shingleSize)),
-                fingerprintList(shingleList(tokens(str2), shingleSize))
-        );
-    }
-
-    // shingles + fingerprints + normalization
-    static double nShingleFingerprintLongestCommonSubsequenceNormalized(String str1, String str2, int shingleSize) {
-        return longestCommonSubsequence(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize)),
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize))
-        );
-    }
 }

@@ -2,13 +2,16 @@ package de.unitrier.st.stringsimilarity.tests;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.List;
+
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
+import static de.unitrier.st.stringsimilarity.Tokenization.NGRAM_SIZE;
+import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
 import static de.unitrier.st.stringsimilarity.edit.Variants.*;
+import static de.unitrier.st.stringsimilarity.fingerprint.Base.*;
 import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
-import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNShingleDice;
-import static de.unitrier.st.stringsimilarity.profile.Default.cosineNGramNormalizedBool;
-import static de.unitrier.st.stringsimilarity.profile.Default.cosineNGramNormalizedTermFrequency;
-import static de.unitrier.st.stringsimilarity.profile.Default.manhattanNGramNormalized;
+import static de.unitrier.st.stringsimilarity.profile.Default.*;
 import static de.unitrier.st.stringsimilarity.set.Default.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -109,16 +112,33 @@ class SimilarityTest {
 
     @Test
     void testWinnowing(){
+        List<List<Integer>> completeFingerprintsS1 = completeFingerprintList(nGramList(s1, NGRAM_SIZE),
+                getWindowSize(NGRAM_SIZE, GUARANTEE_THRESHOLD));
+        List<List<Integer>> completeFingerprintsS2 = completeFingerprintList(nGramList(s2, NGRAM_SIZE),
+                getWindowSize(NGRAM_SIZE, GUARANTEE_THRESHOLD));
 
-        // TODO: check this test case
+        List<Integer> fingerprintsS1 = fingerprintList(nGramList(s1, NGRAM_SIZE),
+                getWindowSize(NGRAM_SIZE, GUARANTEE_THRESHOLD));
+        List<Integer> fingerprintsS2 = fingerprintList(nGramList(s2, NGRAM_SIZE),
+                getWindowSize(NGRAM_SIZE, GUARANTEE_THRESHOLD));
 
-        // fingerprints for s1: [3063534, 3237073,          3237060, 3026660, 1305865]
-        // fingerprints for s2: [3063534, 3237073, 3154628, 3237060, 3026660, 1305865]
-        assertEquals(2*5.0/(5+6), winnowingNGramDice(s1,s2), DELTA_MAX);
+        for (int i=0; i<completeFingerprintsS1.size(); i++) {
+            assertEquals(Collections.min(completeFingerprintsS1.get(i)), fingerprintsS1.get(i));
+        }
 
-        // fingerprints for s1: [-1791658002]
-        // fingerprints for s2: [-1724834244]
-        assertEquals(2*0.0/(1+1), winnowingNShingleDice(s1,s2), DELTA_MAX);
+        for (int i=0; i<completeFingerprintsS2.size(); i++) {
+            assertEquals(Collections.min(completeFingerprintsS2.get(i)), fingerprintsS2.get(i));
+        }
+
+        //HashSet<Integer> distinctFingerprintsS1 = new HashSet<Integer>(fingerprintsS1);
+        //HashSet<Integer> distinctFingerprintsS2 = new HashSet<Integer>(fingerprintsS2);
+
+        // distinct fingerprints for s1: [1052657, 2982750, 1275113, 1036785, 2587768]
+        // distinct fingerprints for s2: [         2982750, 1275113, 1036785, 2587768, 1055071]
+        // intersection: [2982750, 1275113, 1036785, 2587768]
+        // dice: 2*4 / (5+5) = 0.8
+
+        assertEquals(0.8, winnowingNGramDice(s1,s2), DELTA_MAX);
     }
 
     @Test

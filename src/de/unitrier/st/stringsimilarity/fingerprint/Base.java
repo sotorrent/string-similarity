@@ -1,20 +1,15 @@
 package de.unitrier.st.stringsimilarity.fingerprint;
 
-import com.google.common.collect.Multiset;
-import de.unitrier.st.stringsimilarity.util.MultisetCollector;
-
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForNGram;
-import static de.unitrier.st.stringsimilarity.Normalization.normalizeForShingle;
 import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
-import static de.unitrier.st.stringsimilarity.Tokenization.shingleList;
-import static de.unitrier.st.stringsimilarity.Tokenization.tokens;
-import static de.unitrier.st.stringsimilarity.set.Base.*;
 
 /*
  * Fingerprint-based similarity metrics.
@@ -23,20 +18,27 @@ import static de.unitrier.st.stringsimilarity.set.Base.*;
  */
 public class Base {
 
-    public static final int WINNOWING_WINDOW_SIZE = 4; // TODO: Keep this as default?
+    public static final int GUARANTEE_THRESHOLD = 10; // TODO: what to choose here?
 
-    public static List<Integer> fingerprintList(List<String> tokens) {
-        return tokens
-                .stream()
-                .map(String::hashCode)
-                .collect(Collectors.toList());
-    }
+    /*
+    * Similarity metrics based on Winnowing.
+    * See Papers Duric13 and Schleimer03.
+    * Duric13 also uses dice for Winnowing.
+    */
 
-    public static List<Integer> fingerprintList(List<String> tokens, int windowSize) {
+    /**
+     * Retrieve the fingerprint of a list of nGrams as defined in the Winnowing algorithm presented in Schleimer03.
+     *
+     * @param nGrams List of nGrams
+     * @param windowSize Winnowing window size
+     * @return Fingerprint of nGrams (list of selected hash values)
+     */
+    public static List<Integer> fingerprintList(List<String> nGrams, int windowSize) {
+        // TODO: Also save positions of selected hashes? (see Schleimer03)
         return IntStream
-                .iterate(0, i -> i+windowSize)
-                .limit((int)Math.ceil((double)tokens.size()/windowSize))
-                .mapToObj(currentStartPos -> tokens.subList(currentStartPos, Math.min(tokens.size(), currentStartPos+windowSize-1)))
+                .iterate(0, i -> i+1)
+                .limit(nGrams.size()-windowSize)
+                .mapToObj(currentStartPos -> nGrams.subList(currentStartPos, currentStartPos+windowSize-1))
                 .map(windowList -> windowList
                         .stream()
                         .map(String::hashCode)
@@ -46,130 +48,64 @@ public class Base {
                 .collect(Collectors.toList());
     }
 
-    public static Multiset<Integer> fingerprintMultiset(Multiset<String> tokens) {
-        return tokens
-                .stream()
-                .map(String::hashCode)
-                .collect(MultisetCollector.toMultiset());
-    }
-
-    public static Multiset<Integer> fingerprintMultiset(Multiset<String> tokens, int windowSize) {
-        return fingerprintList(new ArrayList<>(tokens), windowSize)
-                .stream()
-                .collect(MultisetCollector.toMultiset());
-    }
-
-    public static Set<Integer> fingerprintSet(Set<String> tokens) {
-        return tokens
-                .stream()
-                .map(String::hashCode)
-                .collect(Collectors.toSet());
-    }
-
-    public static Set<Integer> fingerprintSet(Set<String> tokens, int windowSize) {
-        return new HashSet<>(fingerprintList(new ArrayList<>(tokens), windowSize));
-    }
-
-    /*
-    * Similarity metrics based on Winnowing.
-    * See Papers Duric13 and Schleimer03.
-    * Duric13 also uses dice for Winnowing.
-    */
-
-    /*
-     * Winnowing base variants using tokens
+    /**
+     * Retrieve hash values for all windows (without filtering)
+     * Used for debugging.
+     *
+     * @param nGrams List of nGrams
+     * @param windowSize Winnowing window size
+     * @return List of lists with hash values for each window
      */
-
-    // tokens
-    static double winnowingTokenSimilarity(String str1, String str2,
-                                           BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(str1), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(str2), WINNOWING_WINDOW_SIZE)
-        );
-
-        return coefficient.apply(set1, set2);
-    }
-
-    // tokens + normalization
-    static double winnowingTokenSimilarityNormalized(String str1, String str2,
-                                                     BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str1)), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(tokens(normalizeForEdit(str2)), WINNOWING_WINDOW_SIZE)
-        );
-
-        return coefficient.apply(set1, set2);
+    public static List<List<Integer>> completeFingerprintList(List<String> nGrams, int windowSize) {
+        return IntStream
+                .iterate(0, i -> i+1)
+                .limit(nGrams.size()-windowSize)
+                .mapToObj(currentStartPos -> nGrams.subList(currentStartPos, currentStartPos+windowSize-1))
+                .map(windowList -> windowList
+                        .stream()
+                        .map(String::hashCode)
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
     }
 
 
-    /*
-     * Winnowing base variants using nGrams
-     */
+    public static int getWindowSize(int nGramSize, int guaranteeThreshold) {
+        // see Schleimer03
+        return guaranteeThreshold-nGramSize+1;
+    }
 
     // ngrams
-    static double winnowingNGramSimilarity(String str1, String str2, int nGramSize,
+    static double winnowingNGramSimilarity(String str1, String str2, int nGramSize, int guaranteeThreshold,
                                            BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
+
+        int windowSize = getWindowSize(nGramSize, guaranteeThreshold);
+
         Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1, nGramSize), WINNOWING_WINDOW_SIZE)
+                fingerprintList(nGramList(str1, nGramSize), windowSize)
         );
 
         Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2, nGramSize), WINNOWING_WINDOW_SIZE)
+                fingerprintList(nGramList(str2, nGramSize), windowSize)
         );
 
         return coefficient.apply(set1, set2);
     }
 
-    // ngram + normalization
-    static double winnowingNGramSimilarityNormalized(String str1, String str2, int nGramSize,
+    // ngrams + normalization
+    static double winnowingNGramSimilarityNormalized(String str1, String str2, int nGramSize, int guaranteeThreshold,
                                                      BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
+
+        int windowSize = getWindowSize(nGramSize, guaranteeThreshold);
+
         Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), WINNOWING_WINDOW_SIZE)
+                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), windowSize)
         );
 
         Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), WINNOWING_WINDOW_SIZE)
+                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), windowSize)
         );
 
         return coefficient.apply(set1, set2);
     }
 
-    /*
-     * Winnowing base variants using shingles
-     */
-
-    // shingles
-    static double winnowingNShingleSimilarity(String str1, String str2, int shingleSize,
-                                              BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str1), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(str2), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return coefficient.apply(set1, set2);
-    }
-
-    // shingles + normalization
-    static double winnowingNShingleSimilarityNormalized(String str1, String str2, int shingleSize,
-                                                        BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
-        Set<Integer> set1 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str1)), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        Set<Integer> set2 = new HashSet<>(
-                fingerprintList(shingleList(tokens(normalizeForShingle(str2)), shingleSize), WINNOWING_WINDOW_SIZE)
-        );
-
-        return coefficient.apply(set1, set2);
-    }
 }

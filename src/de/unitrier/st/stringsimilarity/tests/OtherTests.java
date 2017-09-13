@@ -51,12 +51,6 @@ class OtherTests {
     }
 
     @Test
-    void testQGramShingleFunction(){
-        double sim = twoShingleFingerprintLongestCommonSubsequence("Hello my world","Hello my beloved world");
-        assertEquals(1.0/3, sim);
-    }
-
-    @Test
     void testJaccardFunction(){
         String s1 = "Hallo Du";
         String s2 = "Hallo Sie";
