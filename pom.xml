@@ -9,6 +9,13 @@
    
     <url>https://github.com/sotorrent/string-similarity</url>
 
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>file://${basedir}/releases/</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
@@ -128,6 +135,11 @@
                         <version>1.0.0</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
             </plugin>
             <!--plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
