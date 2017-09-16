@@ -12,8 +12,6 @@ import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
  * All base metrics must return a value between 0.0 and 1.0.
  */
 public class Base {
-    public static final double THRESHOLD = 0.6; // TODO: set after evaluation
-
     /*
      * Jaro-Winkler excluded because it is optimized for single words.
      * See: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance
