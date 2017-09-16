@@ -17,7 +17,6 @@ import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
  * All base metrics must return a value between 0.0 and 1.0.
  */
 public class Base {
-
     public static final int GUARANTEE_THRESHOLD = 10; // TODO: what to choose here?
 
     /*

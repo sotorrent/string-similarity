@@ -22,9 +22,6 @@ import static de.unitrier.st.stringsimilarity.util.MultisetCollector.toMultiset;
  * All base metrics must return a value between 0.0 and 1.0.
  */
 public class Base {
-
-    public static final double THRESHOLD = 0.6; // TODO: set after evaluation
-
     public enum WeightingScheme{TERM_FREQUENCY, NORMALIZED_TERM_FREQUENCY, BOOL}
     private final static double k = 1.5; // for term frequency with normalization // TODO: according to this source, k should be between 1.2 and 2 (source: https://en.wikipedia.org/wiki/Okapi_BM25)
 

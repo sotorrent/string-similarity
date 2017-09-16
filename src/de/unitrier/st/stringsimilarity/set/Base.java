@@ -20,9 +20,6 @@ import static de.unitrier.st.stringsimilarity.Tokenization.DEFAULT_SEPARATOR;
  * All base metrics must return a value between 0.0 and 1.0.
  */
 public class Base {
-
-    public static final double THRESHOLD = 0.6; // TODO: set after evaluation
-
     /**
      * Convert a list to a set.
      * This is needed, because tokens() return a list of tokens, but the set-based metrics need a set of tokens.
