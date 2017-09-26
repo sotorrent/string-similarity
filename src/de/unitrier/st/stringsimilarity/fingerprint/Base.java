@@ -69,7 +69,12 @@ public class Base {
 
 
     public static int getWindowSize(int nGramSize, int guaranteeThreshold) {
-        // see Schleimer03
+        // see Schleimer03: "Let the window size be w = t − k + 1. Consider the sequence of hashes h1 h2 . . . hn that
+        // represents a document. Each position 1 ≤ i ≤ n − w + 1 in this sequence defines a window of hashes
+        // hi . . . hi+w−1 ."
+        if (nGramSize > guaranteeThreshold) {
+            throw new IllegalArgumentException("nGramSize must not be larger than guaranteeThreshold!");
+        }
         return guaranteeThreshold-nGramSize+1;
     }
 
