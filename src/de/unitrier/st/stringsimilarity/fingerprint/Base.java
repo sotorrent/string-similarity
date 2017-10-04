@@ -105,22 +105,15 @@ public class Base {
     }
 
 
-    public static int getWindowSize(int nGramSize, int guaranteeThreshold) {
-        // see Schleimer03: "Let the window size be w = t − k + 1. Consider the sequence of hashes h1 h2 . . . hn that
-        // represents a document. Each position 1 ≤ i ≤ n − w + 1 in this sequence defines a window of hashes
-        // hi . . . hi+w−1 ."
-        if (nGramSize > guaranteeThreshold) {
-            throw new IllegalArgumentException("nGramSize must not be larger than guaranteeThreshold!");
-        }
-        return guaranteeThreshold-nGramSize+1;
+    public static int getGuaranteeThreshold(int nGramSize, int windowSize) {
+        // see Schleimer03 "Robust Winnowing": "for any two matching substrings of length t = w+k−1 we guarantee to select
+        // the same hash value and so the match is still found;"
+        return windowSize+nGramSize-1;
     }
 
     // ngrams
-    static double winnowingNGramSimilarity(String str1, String str2, int nGramSize, int guaranteeThreshold,
+    static double winnowingNGramSimilarity(String str1, String str2, int nGramSize, int windowSize,
                                            BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
-
-        int windowSize = getWindowSize(nGramSize, guaranteeThreshold);
-
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(nGramList(str1, nGramSize), windowSize)
         );
@@ -133,11 +126,8 @@ public class Base {
     }
 
     // ngrams + normalization
-    static double winnowingNGramSimilarityNormalized(String str1, String str2, int nGramSize, int guaranteeThreshold,
+    static double winnowingNGramSimilarityNormalized(String str1, String str2, int nGramSize, int windowSize,
                                                      BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
-
-        int windowSize = getWindowSize(nGramSize, guaranteeThreshold);
-
         Set<Integer> set1 = new HashSet<>(
                 fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), windowSize)
         );
