@@ -2,8 +2,9 @@ package de.unitrier.st.stringsimilarity.tests;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
 import static de.unitrier.st.stringsimilarity.Tokenization.NGRAM_SIZE;
@@ -13,7 +14,10 @@ import static de.unitrier.st.stringsimilarity.fingerprint.Base.*;
 import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
 import static de.unitrier.st.stringsimilarity.profile.Default.*;
 import static de.unitrier.st.stringsimilarity.set.Default.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.hamcrest.CoreMatchers.*;
 
 class SimilarityTest {
 
@@ -112,30 +116,46 @@ class SimilarityTest {
 
     @Test
     void testWinnowing(){
-        List<List<Integer>> completeFingerprintsS1 = completeFingerprintList(nGramList(s1, NGRAM_SIZE),
+        // test if method fingerprintList selects correct hash values
+        List<List<NGramHash>> completeFingerprintsS1 = completeFingerprintList(nGramList(s1, NGRAM_SIZE),
                 getWindowSize(NGRAM_SIZE, GUARANTEE_THRESHOLD));
-        List<List<Integer>> completeFingerprintsS2 = completeFingerprintList(nGramList(s2, NGRAM_SIZE),
+        List<List<NGramHash>> completeFingerprintsS2 = completeFingerprintList(nGramList(s2, NGRAM_SIZE),
                 getWindowSize(NGRAM_SIZE, GUARANTEE_THRESHOLD));
+
+        List<Integer> filteredFingerprintsS1 = completeFingerprintsS1.stream()
+                .map(windowList -> windowList
+                        .stream()
+                        .min(NGramHash::compareTo))
+                .distinct()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(h -> h.hashValue)
+                .collect(Collectors.toList());
+
+        List<Integer> filteredFingerprintsS2 = completeFingerprintsS2.stream()
+                .map(windowList -> windowList
+                        .stream()
+                        .min(NGramHash::compareTo))
+                .distinct()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(h -> h.hashValue)
+                .collect(Collectors.toList());
 
         List<Integer> fingerprintsS1 = fingerprintList(nGramList(s1, NGRAM_SIZE),
                 getWindowSize(NGRAM_SIZE, GUARANTEE_THRESHOLD));
         List<Integer> fingerprintsS2 = fingerprintList(nGramList(s2, NGRAM_SIZE),
                 getWindowSize(NGRAM_SIZE, GUARANTEE_THRESHOLD));
 
-        for (int i=0; i<completeFingerprintsS1.size(); i++) {
-            assertEquals(Collections.min(completeFingerprintsS1.get(i)), fingerprintsS1.get(i));
-        }
+        assertThat(fingerprintsS1, is(filteredFingerprintsS1));
+        assertThat(fingerprintsS2, is(filteredFingerprintsS2));
 
-        for (int i=0; i<completeFingerprintsS2.size(); i++) {
-            assertEquals(Collections.min(completeFingerprintsS2.get(i)), fingerprintsS2.get(i));
-        }
 
-        //HashSet<Integer> distinctFingerprintsS1 = new HashSet<Integer>(fingerprintsS1);
-        //HashSet<Integer> distinctFingerprintsS2 = new HashSet<Integer>(fingerprintsS2);
+        // test an winnowing example
 
-        // distinct fingerprints for s1: [1052657, 2982750, 1275113, 1036785, 2587768]
-        // distinct fingerprints for s2: [         2982750, 1275113, 1036785, 2587768, 1055071]
-        // intersection: [2982750, 1275113, 1036785, 2587768]
+        // distinct fingerprints for s1: [2982750, 1036785, 2587768, 1052657,          1275113]
+        // distinct fingerprints for s2: [2982750, 1036785, 2587768,          1055071, 1275113]
+        // intersection: [2982750, 1036785, 2587768, 1275113]
         // dice: 2*4 / (5+5) = 0.8
 
         assertEquals(0.8, winnowingNGramDice(s1,s2), DELTA_MAX);
