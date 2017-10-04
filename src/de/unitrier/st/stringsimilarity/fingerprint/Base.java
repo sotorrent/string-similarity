@@ -1,6 +1,5 @@
 package de.unitrier.st.stringsimilarity.fingerprint;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -15,8 +14,6 @@ import static de.unitrier.st.stringsimilarity.Tokenization.nGramList;
  * All base metrics must return a value between 0.0 and 1.0.
  */
 public class Base {
-    public static final int GUARANTEE_THRESHOLD = 10; // TODO: what to choose here?
-
     /*
     * Similarity metrics based on Winnowing.
     * See Papers Duric13 and Schleimer03.
@@ -32,59 +29,42 @@ public class Base {
      */
     public static List<Integer> fingerprintList(List<String> nGrams, int windowSize) {
         // TODO: Also return positions of selected hashes? (see Schleimer03)
-        List<NGramHash> nGramHashes = getNGramHashes(nGrams);
-        return IntStream
-                .iterate(0, i -> i+1)
-                .limit(nGramHashes.size()-windowSize)
-                .mapToObj(currentStartPos -> nGramHashes.subList(currentStartPos, currentStartPos+windowSize-1))
-                .map(windowList -> windowList
-                        .stream()
-                        .min(NGramHash::compareTo))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .distinct() // uses equals()
-                .map(n -> n.hashValue)
-                .collect(Collectors.toList());
+
+        Integer[] nGramHashes = getNGramHashes(nGrams);
+        List<Integer> fingerprintList = new LinkedList<>();
+        int minHashPos = -1; // index of minimum hash
+
+        for (int windowBegin = 0; windowBegin <= nGramHashes.length-windowSize; windowBegin++) {
+            int windowEnd = windowBegin+windowSize-1; // index of last hash in window
+
+            if (minHashPos < windowBegin) {
+                // first hash or previous minimum is no longer in window -> search for new minimum from right to left
+                minHashPos = windowEnd;
+                for (int currentPos = windowEnd-1; currentPos >= windowBegin; currentPos--) {
+                    if (nGramHashes[currentPos] < nGramHashes[minHashPos]) {
+                        minHashPos = currentPos;
+                    }
+                }
+                fingerprintList.add(nGramHashes[minHashPos]);
+            } else {
+                // previous minimum is still in window -> compare new (rightmost) hash value in window with minHash
+                if (nGramHashes[windowEnd] < nGramHashes[minHashPos]) {
+                    minHashPos = windowEnd;
+                    fingerprintList.add(nGramHashes[minHashPos]);
+                }
+            }
+        }
+
+        return fingerprintList;
     }
 
-    private static List<NGramHash> getNGramHashes(List<String> nGrams) {
+    private static Integer[] getNGramHashes(List<String> nGrams) {
         // save nGram hash values together with their position
-        List<NGramHash> nGramHashValues = new ArrayList<>(nGrams.size());
+        Integer[] nGramHashValues = new Integer[nGrams.size()];
         for (int i=0; i<nGrams.size(); i++) {
-            nGramHashValues.add(new NGramHash(nGrams.get(i).hashCode(), i));
+            nGramHashValues[i] = nGrams.get(i).hashCode();
         }
         return nGramHashValues;
-    }
-
-    public static class NGramHash implements Comparable<NGramHash> {
-        public int hashValue;
-        public int pos;
-
-        public NGramHash(int hash, int pos) {
-            this.hashValue = hash;
-            this.pos = pos;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof NGramHash) {
-                NGramHash other = (NGramHash) obj;
-                return (this.hashValue == other.hashValue && this.pos == other.pos);
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public int compareTo(@Nonnull NGramHash o) {
-            if (this.hashValue > o.hashValue) {
-                return 1;
-            } else if (this.hashValue == o.hashValue) {
-                return Integer.compare(this.pos, o.pos);
-            } else {
-                return -1;
-            }
-        }
     }
 
     /**
@@ -95,8 +75,8 @@ public class Base {
      * @param windowSize Winnowing window size
      * @return List of lists with hash values for each window
      */
-    public static List<List<NGramHash>> completeFingerprintList(List<String> nGrams, int windowSize) {
-        List<NGramHash> nGramHashes = getNGramHashes(nGrams);
+    public static List<List<Integer>> completeFingerprintList(List<String> nGrams, int windowSize) {
+        List<Integer> nGramHashes = Arrays.asList(getNGramHashes(nGrams));
         return IntStream
                 .iterate(0, i -> i+1)
                 .limit(nGramHashes.size()-windowSize)
@@ -111,29 +91,34 @@ public class Base {
         return windowSize+nGramSize-1;
     }
 
+    public static int getWindowSize(int nGramSize) {
+        // see Schleimer03 section "Experiments with Web Data"
+        return 2*nGramSize;
+    }
+
     // ngrams
-    static double winnowingNGramSimilarity(String str1, String str2, int nGramSize, int windowSize,
+    static double winnowingNGramSimilarity(String str1, String str2, int nGramSize,
                                            BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(str1, nGramSize), windowSize)
+                fingerprintList(nGramList(str1, nGramSize), getWindowSize(nGramSize))
         );
 
         Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(str2, nGramSize), windowSize)
+                fingerprintList(nGramList(str2, nGramSize), getWindowSize(nGramSize))
         );
 
         return coefficient.apply(set1, set2);
     }
 
     // ngrams + normalization
-    static double winnowingNGramSimilarityNormalized(String str1, String str2, int nGramSize, int windowSize,
+    static double winnowingNGramSimilarityNormalized(String str1, String str2, int nGramSize,
                                                      BiFunction<Set<Integer>, Set<Integer>, Double> coefficient) {
         Set<Integer> set1 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), windowSize)
+                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), getWindowSize(nGramSize))
         );
 
         Set<Integer> set2 = new HashSet<>(
-                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), windowSize)
+                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), getWindowSize(nGramSize))
         );
 
         return coefficient.apply(set1, set2);
