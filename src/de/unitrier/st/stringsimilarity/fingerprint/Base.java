@@ -27,7 +27,7 @@ public class Base {
      * @param windowSize Winnowing window size
      * @return Fingerprint of nGrams (list of selected hash values)
      */
-    public static List<Integer> fingerprintList(List<String> nGrams, int windowSize) {
+    private static List<Integer> fingerprintList(List<String> nGrams, int windowSize) {
         // TODO: Also return positions of selected hashes? (see Schleimer03)
 
         Integer[] nGramHashes = getNGramHashes(nGrams);
@@ -75,7 +75,7 @@ public class Base {
      * @param windowSize Winnowing window size
      * @return List of lists with hash values for each window
      */
-    public static List<List<Integer>> completeFingerprintList(List<String> nGrams, int windowSize) {
+    private static List<List<Integer>> completeFingerprintList(List<String> nGrams, int windowSize) {
         List<Integer> nGramHashes = Arrays.asList(getNGramHashes(nGrams));
         return IntStream
                 .iterate(0, i -> i+1)
@@ -85,13 +85,13 @@ public class Base {
     }
 
 
-    public static int getGuaranteeThreshold(int nGramSize, int windowSize) {
+    private static int getGuaranteeThreshold(int nGramSize, int windowSize) {
         // see Schleimer03 "Robust Winnowing": "for any two matching substrings of length t = w+k−1 we guarantee to select
         // the same hash value and so the match is still found;"
         return windowSize+nGramSize-1;
     }
 
-    public static int getWindowSize(int nGramSize) {
+    private static int getWindowSize(int nGramSize) {
         // see Schleimer03 section "Experiments with Web Data"
         return 2*nGramSize;
     }
@@ -124,4 +124,39 @@ public class Base {
         return coefficient.apply(set1, set2);
     }
 
+    // ngrams + edit-based metric
+    static double winnowingNGramLongestCommonSubsequenceSimilarity(String str1, String str2, int nGramSize,
+                                                   BiFunction<List<String>, List<String>, Double> editMetric) {
+        List<String> fingerprintList1 =
+                fingerprintList(nGramList(str1, nGramSize), getWindowSize(nGramSize))
+                        .stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.toList());
+
+        List<String> fingerprintList2 =
+                fingerprintList(nGramList(str2, nGramSize), getWindowSize(nGramSize))
+                        .stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.toList());
+
+        return editMetric.apply(fingerprintList1, fingerprintList2);
+    }
+
+    // ngrams + normalization + edit-based metric
+    static double winnowingNGramLongestCommonSubsequenceSimilarityNormalized(String str1, String str2, int nGramSize,
+                                                     BiFunction<List<String>, List<String>, Double> editMetric) {
+        List<String> fingerprintList1 =
+                fingerprintList(nGramList(normalizeForNGram(str1), nGramSize), getWindowSize(nGramSize))
+                        .stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.toList());
+
+        List<String> fingerprintList2 =
+                fingerprintList(nGramList(normalizeForNGram(str2), nGramSize), getWindowSize(nGramSize))
+                        .stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.toList());
+
+        return editMetric.apply(fingerprintList1, fingerprintList2);
+    }
 }

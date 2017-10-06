@@ -67,4 +67,28 @@ public class Default {
         );
     }
 
+    // ngrams + longest-common-subsequence
+    public static double winnowingNGramLongestCommonSubsequence(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, NGRAM_SIZE,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    // ngrams + longest-common-subsequence + normalization
+    public static double winnowingNGramLongestCommonSubsequenceNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, NGRAM_SIZE,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    // ngrams + optimal alignment
+    public static double winnowingNGramOptimalAlignment(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, NGRAM_SIZE,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
+    // ngrams + optimal alignment + normalization
+    public static double winnowingNGramOptimalAlignmentNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, NGRAM_SIZE,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
 }
