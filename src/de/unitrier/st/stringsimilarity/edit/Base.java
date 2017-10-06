@@ -173,7 +173,7 @@ public class Base {
      * See: https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance#Optimal_string_alignment_distance
      * See: https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm
      */
-    static <T> double optimalAlignment(List<T> tokens1, List<T> tokens2) {
+    public static <T> double optimalAlignment(List<T> tokens1, List<T> tokens2) {
         int n = tokens1.size();
         int m = tokens2.size();
 
@@ -266,7 +266,7 @@ public class Base {
      * See: https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
      * See: https://github.com/tdebatty/java-string-similarity#metric-longest-common-subsequence
      */
-    static <T> double longestCommonSubsequence(List<T> tokens1, List<T> tokens2) {
+    public static <T> double longestCommonSubsequence(List<T> tokens1, List<T> tokens2) {
         int n = tokens1.size();
         int m = tokens2.size();
 

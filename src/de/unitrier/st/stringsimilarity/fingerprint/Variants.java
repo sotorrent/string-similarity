@@ -209,4 +209,88 @@ public class Variants {
         );
     }
 
+    // ngrams + longest-common-subsequence
+    public static double winnowingTwoGramLongestCommonSubsequence(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    public static double winnowingThreeGramLongestCommonSubsequence(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    public static double winnowingFourGramLongestCommonSubsequence(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    public static double winnowingFiveGramLongestCommonSubsequence(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    // ngrams + longest-common-subsequence + normalization
+    public static double winnowingTwoGramLongestCommonSubsequenceNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    public static double winnowingThreeGramLongestCommonSubsequenceNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    public static double winnowingFourGramLongestCommonSubsequenceNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    public static double winnowingFiveGramLongestCommonSubsequenceNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.edit.Base::longestCommonSubsequence);
+    }
+
+    // ngrams + optimal alignment
+    public static double winnowingTwoGramOptimalAlignment(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
+    public static double winnowingThreeGramOptimalAlignment(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
+    public static double winnowingFourGramOptimalAlignment(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
+    public static double winnowingFiveGramOptimalAlignment(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarity(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
+    // ngrams + optimal alignment + normalization
+    public static double winnowingTwoGramOptimalAlignmentNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, 2,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
+    public static double winnowingThreeGramOptimalAlignmentNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, 3,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
+    public static double winnowingFourGramOptimalAlignmentNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, 4,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
+    public static double winnowingFiveGramOptimalAlignmentNormalized(String str1, String str2) {
+        return Base.winnowingNGramLongestCommonSubsequenceSimilarityNormalized(str1, str2, 5,
+                de.unitrier.st.stringsimilarity.edit.Base::optimalAlignment);
+    }
+
 }
