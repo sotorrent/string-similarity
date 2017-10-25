@@ -1,6 +1,6 @@
 package de.unitrier.st.stringsimilarity.hybrid;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import de.unitrier.st.stringsimilarity.util.NotImplementedException;
 
 /*
  * Hybrid similarity metrics.
