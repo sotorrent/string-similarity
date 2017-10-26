@@ -89,11 +89,6 @@ public class Default {
         return nShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::dice);
     }
 
-    // shingles + normalization
-    public static double nShingleDiceVariantNormalized(String str1, String str2) {
-        return nShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::dice);
-    }
-
     // ********** OVERLAP **********
 
     // tokens
