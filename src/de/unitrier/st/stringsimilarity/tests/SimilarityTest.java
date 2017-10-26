@@ -40,6 +40,12 @@ class SimilarityTest {
         assertEquals(0.2, levenshtein("Hello","Ola"), DELTA_MAX);
 
         assertThat(levenshtein("Here is my go at it:", "Here is my go at it:"), allOf(greaterThanOrEqualTo(0.0),lessThanOrEqualTo(1.0)));
+
+        // str1: "ab"
+        // str2: ""
+        // max length: 2
+        // levenshtein distance: 2
+        assertEquals((2.0-2.0)/2.0, levenshtein("ab", ""));
     }
 
     @Test
