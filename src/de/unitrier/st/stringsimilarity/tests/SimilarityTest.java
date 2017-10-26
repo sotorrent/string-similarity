@@ -3,14 +3,13 @@ package de.unitrier.st.stringsimilarity.tests;
 import de.unitrier.st.stringsimilarity.util.InputTooShortException;
 import org.junit.jupiter.api.Test;
 
+import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
 import static de.unitrier.st.stringsimilarity.edit.Variants.*;
 import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
 import static de.unitrier.st.stringsimilarity.profile.Default.*;
 import static de.unitrier.st.stringsimilarity.set.Default.*;
-import static de.unitrier.st.stringsimilarity.set.Variants.fourGramOverlap;
-import static de.unitrier.st.stringsimilarity.set.Variants.twoGramJaccard;
-import static de.unitrier.st.stringsimilarity.set.Variants.twoShingleJaccard;
+import static de.unitrier.st.stringsimilarity.set.Variants.*;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
@@ -31,13 +30,19 @@ class SimilarityTest {
     private String t1 = "with Hash table entries Hash table entries has Arun name is here, Arun name is here with Hash table entries Arun how is arun";
     private String t2 = "Hash table entries has Arun name is here, Arun name is here with Hash table entries Arun how is arun Arun name is here with Hash table entries";
 
-    // ************************ EDIT-BASED
+    // ************************ EDIT-BASED ************************
     @Test
     void testLevenshtein() {
         assertEquals(1.0, levenshtein("", ""), DELTA_MAX);
-        // TODO: update expected value (use fraction)
-        //assertEquals(0.8985, levenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), DELTA_MAX);
+        assertEquals(1.0, levenshtein("Hello","Hello"), DELTA_MAX);
+
+        // str1 normalized: "please divide this sentence, into tokens or ngrams or shingles"
+        // str2 normalized: "please do not divide this sentence, into tokens or ngrams or shingles"
+        // max length: 69
+        // levenshtein distance: 7
+        assertEquals((69.0-7.0)/69.0, levenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), DELTA_MAX);
         assertEquals(0.5, levenshtein("paul", "pual"), DELTA_MAX);
+        assertEquals(0.2, levenshtein("Hello","Ola"), DELTA_MAX);
 
         assertThat(levenshtein("Here is my go at it:", "Here is my go at it:"), allOf(greaterThanOrEqualTo(0.0),lessThanOrEqualTo(1.0)));
     }
@@ -45,16 +50,29 @@ class SimilarityTest {
     @Test
     void testDamerauLevenshtein() {
         assertEquals(1.0, damerauLevenshtein("", ""), DELTA_MAX);
-        // TODO: update expected value (use fraction)
-        //assertEquals(0.8985, damerauLevenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), DELTA_MAX);
+        assertEquals(1.0, damerauLevenshtein("Hello","Hello"), DELTA_MAX);
+        // str1 normalized: "please divide this sentence, into tokens or ngrams or shingles"
+        // str2 normalized: "please do not divide this sentence, into tokens or ngrams or shingles"
+        // max length: 69
+        // damerau-levenshtein distance: 7
+        assertEquals((69.0-7.0)/69.0, damerauLevenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), DELTA_MAX);
         assertEquals(0.75, damerauLevenshtein("paul", "pual"), DELTA_MAX);
+        assertEquals(0.8, damerauLevenshtein("Hello","Hlelo"), DELTA_MAX);
     }
 
-    // ************************ SET-BASED
+    // ************************ SET-BASED ************************
     @Test
     void testSetBased(){
         assertEquals(15./24, nGramJaccard(s1,s2), DELTA_MAX);
         assertEquals(3./15, nShingleJaccard(str1,str2), DELTA_MAX);
+
+        // str1: "Hallo Du";
+        // str2: "Hallo Sie";
+        //
+        //       "Hall" - "allo" - "llo " - "lo D"  - "o Du" - "lo S" - "o Si" - " Sie"
+        // str1:   1         1       1        1          1        0        0        0
+        // str2:   1         1       1        0          0        1        1        1
+        assertEquals(3.0/8, fourGramJaccard("Hallo Du", "Hallo Sie"));
 
         assertEquals(2*15./(18+21), nGramDice(s1,s2), DELTA_MAX);
         assertEquals(2*3./(8+10), nShingleDice(str1,str2), DELTA_MAX);
@@ -63,11 +81,15 @@ class SimilarityTest {
         assertEquals(3./8, nShingleOverlap(str1,str2), DELTA_MAX);
 
         assertThat(fourGramOverlap("Here is my go at it:", "Here is my go at it:"), allOf(greaterThanOrEqualTo(0.0),lessThanOrEqualTo(1.0)));
+
+        // "Hallo Welt" -> "Hall", "allo", "llo ", "lo W", "o We", " Wel", "Welt"
+        // "Hallo Wlt" -> "Hall", "allo", "llo ", "lo W", "o Wl", "o Wlt"
+        // -> Union: 9, Intersection: 4 -> 4/9=0.444...
+        assertEquals(4.0/9, fourGramJaccard("Hallo Welt", "Hallo Wlt"), DELTA_MAX);
     }
 
     @Test
     void testCosine(){
-
         // publ ubli blic lics icst cstr stri trin ring ingf ngf( gf(S f(st (str stri trin ring ings ngs)
         // publ ubli blic lics icst cstr stri trin ring ingf ngfu gfun func unc( nc(s c(st (str stri trin ring ings ngs)
 
@@ -91,7 +113,7 @@ class SimilarityTest {
         assertEquals(13/(4*Math.sqrt(19)), cosineNGramNormalizedBool(s1, s2), DELTA_MAX);
 
         // check for rounding errors
-        assertEquals(1.0, cosineNGramNormalizedTermFrequency("Please", "Please"));
+        assertEquals(1.0, cosineNGramNormalizedTermFrequency("Please", "Please"), DELTA_MAX);
     }
 
     @Test
@@ -114,6 +136,8 @@ class SimilarityTest {
         // LCS is   "Please divide this entence, into Tokens or nGrams or hingles"              => 60 Characters
 
         assertEquals(60.0/69, longestCommonSubsequence(str1,str2), DELTA_MAX);
+
+        assertEquals(0.6, longestCommonSubsequence("ABCDEFG","ABCDEFHJKL"), DELTA_MAX);
     }
 
 
@@ -125,6 +149,9 @@ class SimilarityTest {
         // dice: 2*2 / (3+3) = 4/6 = 0.66...
 
         assertEquals(4.0/6, winnowingNGramDice(s1,s2), DELTA_MAX);
+
+        double sim = winnowingNGramDice("public Node(int n)", "public Node(int v)");
+        assertEquals(1.0, sim, DELTA_MAX);
     }
 
     @Test
