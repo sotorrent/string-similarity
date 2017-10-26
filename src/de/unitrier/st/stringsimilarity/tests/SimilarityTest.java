@@ -8,8 +8,13 @@ import static de.unitrier.st.stringsimilarity.edit.Variants.*;
 import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
 import static de.unitrier.st.stringsimilarity.profile.Default.*;
 import static de.unitrier.st.stringsimilarity.set.Default.*;
+import static de.unitrier.st.stringsimilarity.set.Variants.fourGramOverlap;
 import static de.unitrier.st.stringsimilarity.set.Variants.twoGramJaccard;
 import static de.unitrier.st.stringsimilarity.set.Variants.twoShingleJaccard;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -33,6 +38,8 @@ class SimilarityTest {
         // TODO: update expected value (use fraction)
         //assertEquals(0.8985, levenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), DELTA_MAX);
         assertEquals(0.5, levenshtein("paul", "pual"), DELTA_MAX);
+
+        assertThat(levenshtein("Here is my go at it:", "Here is my go at it:"), allOf(greaterThanOrEqualTo(0.0),lessThanOrEqualTo(1.0)));
     }
 
     @Test
@@ -54,6 +61,8 @@ class SimilarityTest {
 
         assertEquals(15./18, nGramOverlap(s1,s2), DELTA_MAX);
         assertEquals(3./8, nShingleOverlap(str1,str2), DELTA_MAX);
+
+        assertThat(fourGramOverlap("Here is my go at it:", "Here is my go at it:"), allOf(greaterThanOrEqualTo(0.0),lessThanOrEqualTo(1.0)));
     }
 
     @Test
