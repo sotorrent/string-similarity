@@ -23,7 +23,8 @@ import static de.unitrier.st.stringsimilarity.util.MultisetCollector.toMultiset;
  */
 public class Base {
     public enum WeightingScheme{TERM_FREQUENCY, NORMALIZED_TERM_FREQUENCY, BOOL}
-    private final static double k = 1.5; // for term frequency with normalization // TODO: according to this source, k should be between 1.2 and 2 (source: https://en.wikipedia.org/wiki/Okapi_BM25)
+    // k is constant for term frequency with normalization
+    private final static double k = 1.5; // According to this source, k should be between 1.2 and 2 (source: https://en.wikipedia.org/wiki/Okapi_BM25)
 
     /*
      * Cosine similarity.
