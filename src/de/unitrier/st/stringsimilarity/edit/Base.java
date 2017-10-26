@@ -182,7 +182,7 @@ public class Base {
         }
 
         // ensure space in O(min(n,m))
-        if (m>n) {
+        if (m<n) {
             List<T> tmp = tokens1;
             tokens1 = tokens2;
             tokens2 = tmp;
