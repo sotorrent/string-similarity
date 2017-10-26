@@ -7,20 +7,15 @@ import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
 import static de.unitrier.st.stringsimilarity.edit.Variants.*;
 import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
-import static de.unitrier.st.stringsimilarity.profile.Default.*;
-import static de.unitrier.st.stringsimilarity.set.Default.*;
+import static de.unitrier.st.stringsimilarity.fingerprint.Variants.winnowingFourGramDice;
+import static de.unitrier.st.stringsimilarity.profile.Variants.*;
 import static de.unitrier.st.stringsimilarity.set.Variants.*;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SimilarityTest {
-
-    // TODO: Write test cases for all variants
-
     private static final String str1 = "Please divide this Sentence, into Tokens or nGrams or Shingles";
     private static final String str2 = "Please do not divide this sentence, into Tokens or nGrams or shingles";
 
@@ -63,8 +58,8 @@ class SimilarityTest {
     // ************************ SET-BASED ************************
     @Test
     void testSetBased(){
-        assertEquals(15./24, nGramJaccard(s1,s2), DELTA_MAX);
-        assertEquals(3./15, nShingleJaccard(str1,str2), DELTA_MAX);
+        assertEquals(15./24, fourGramJaccard(s1,s2), DELTA_MAX);
+        assertEquals(3./15, threeShingleJaccard(str1,str2), DELTA_MAX);
 
         // str1: "Hallo Du";
         // str2: "Hallo Sie";
@@ -74,11 +69,11 @@ class SimilarityTest {
         // str2:   1         1       1        0          0        1        1        1
         assertEquals(3.0/8, fourGramJaccard("Hallo Du", "Hallo Sie"));
 
-        assertEquals(2*15./(18+21), nGramDice(s1,s2), DELTA_MAX);
-        assertEquals(2*3./(8+10), nShingleDice(str1,str2), DELTA_MAX);
+        assertEquals(2*15./(18+21), fourGramDice(s1,s2), DELTA_MAX);
+        assertEquals(2*3./(8+10), threeShingleDice(str1,str2), DELTA_MAX);
 
-        assertEquals(15./18, nGramOverlap(s1,s2), DELTA_MAX);
-        assertEquals(3./8, nShingleOverlap(str1,str2), DELTA_MAX);
+        assertEquals(15./18, fourGramOverlap(s1,s2), DELTA_MAX);
+        assertEquals(3./8, threeShingleOverlap(str1,str2), DELTA_MAX);
 
         assertThat(fourGramOverlap("Here is my go at it:", "Here is my go at it:"), allOf(greaterThanOrEqualTo(0.0),lessThanOrEqualTo(1.0)));
 
@@ -109,11 +104,11 @@ class SimilarityTest {
         // TF: 22/(5*sqrt(28)) = 0.831
         // BOOL: 13/(4*sqrt(19)) = 0.746
 
-        assertEquals(22/(5*Math.sqrt(28)), cosineNGramNormalizedTermFrequency(s1, s2), DELTA_MAX);
-        assertEquals(13/(4*Math.sqrt(19)), cosineNGramNormalizedBool(s1, s2), DELTA_MAX);
+        assertEquals(22/(5*Math.sqrt(28)), cosineFourGramNormalizedTermFrequency(s1, s2), DELTA_MAX);
+        assertEquals(13/(4*Math.sqrt(19)), cosineFourGramNormalizedBool(s1, s2), DELTA_MAX);
 
         // check for rounding errors
-        assertEquals(1.0, cosineNGramNormalizedTermFrequency("Please", "Please"), DELTA_MAX);
+        assertEquals(1.0, cosineFourGramNormalizedTermFrequency("Please", "Please"), DELTA_MAX);
     }
 
     @Test
@@ -126,7 +121,7 @@ class SimilarityTest {
         // length2 = 4
         // sim = 1 - 2/(4+4) = 1 - 1/4 = 0.75
 
-        assertEquals(1 - 1.0/4, manhattanNGramNormalized("hallowe", "hallowo"), DELTA_MAX);
+        assertEquals(1 - 1.0/4, manhattanFourGramNormalized("hallowe", "hallowo"), DELTA_MAX);
     }
 
     @Test
@@ -148,7 +143,7 @@ class SimilarityTest {
         // intersection: [1275113, 1036785]
         // dice: 2*2 / (3+3) = 4/6 = 0.66...
 
-        assertEquals(4.0/6, winnowingNGramDice(s1,s2), DELTA_MAX);
+        assertEquals(4.0/6, winnowingFourGramDice(s1,s2), DELTA_MAX);
 
         double sim = winnowingNGramDice("public Node(int n)", "public Node(int v)");
         assertEquals(1.0, sim, DELTA_MAX);
@@ -156,16 +151,16 @@ class SimilarityTest {
 
     @Test
     void testNGramSimilarityKondrak05(){
-        assertEquals(0.8659420013427734, nGramSimilarityKondrak05(str1, str2), DELTA_MAX);
-        assertEquals(0.8571428656578064, nGramSimilarityKondrak05(s1, s2), DELTA_MAX);
-        assertEquals(0.5246478915214539, nGramSimilarityKondrak05(t1, t2), DELTA_MAX);
+        assertEquals(0.8659420013427734, fourGramSimilarityKondrak05(str1, str2), DELTA_MAX);
+        assertEquals(0.8571428656578064, fourGramSimilarityKondrak05(s1, s2), DELTA_MAX);
+        assertEquals(0.5246478915214539, fourGramSimilarityKondrak05(t1, t2), DELTA_MAX);
 
-        assertEquals(1.0, nGramSimilarityKondrak05(str1, str1), DELTA_MAX);
-        assertEquals(1.0, nGramSimilarityKondrak05(str2, str2), DELTA_MAX);
-        assertEquals(1.0, nGramSimilarityKondrak05(s1, s1), DELTA_MAX);
-        assertEquals(1.0, nGramSimilarityKondrak05(s2, s2), DELTA_MAX);
-        assertEquals(1.0, nGramSimilarityKondrak05(t1, t1), DELTA_MAX);
-        assertEquals(1.0, nGramSimilarityKondrak05(t2, t2), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(str1, str1), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(str2, str2), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(s1, s1), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(s2, s2), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(t1, t1), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(t2, t2), DELTA_MAX);
     }
 
     @Test
