@@ -1,5 +1,6 @@
 package de.unitrier.st.stringsimilarity.tests;
 
+import de.unitrier.st.stringsimilarity.util.InputTooShortException;
 import org.junit.jupiter.api.Test;
 
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
@@ -7,7 +8,10 @@ import static de.unitrier.st.stringsimilarity.edit.Variants.*;
 import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
 import static de.unitrier.st.stringsimilarity.profile.Default.*;
 import static de.unitrier.st.stringsimilarity.set.Default.*;
+import static de.unitrier.st.stringsimilarity.set.Variants.twoGramJaccard;
+import static de.unitrier.st.stringsimilarity.set.Variants.twoShingleJaccard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SimilarityTest {
 
@@ -138,5 +142,12 @@ class SimilarityTest {
     void testLongestCommonSubsequence() {
         assertEquals(1.0, longestCommonSubsequence("", ""), DELTA_MAX);
         assertEquals(0.75, longestCommonSubsequence("paul", "pual"), DELTA_MAX);
+    }
+
+    @Test
+    void testInputTooShortException() {
+        assertThrows(InputTooShortException.class, () -> twoShingleJaccard("a", "a"));
+
+        assertThrows(InputTooShortException.class, () -> twoGramJaccard("a", "a"));
     }
 }
