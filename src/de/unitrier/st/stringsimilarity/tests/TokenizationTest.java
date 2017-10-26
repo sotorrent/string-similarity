@@ -1,6 +1,7 @@
 package de.unitrier.st.stringsimilarity.tests;
 
 import com.google.common.collect.Multiset;
+import de.unitrier.st.stringsimilarity.util.InputTooShortException;
 import de.unitrier.st.stringsimilarity.util.MultisetCollector;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,7 @@ import static de.unitrier.st.stringsimilarity.Tokenization.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class TokenizationTest {
@@ -63,10 +65,8 @@ class TokenizationTest {
         Set<String> expectedNGramSet = new HashSet<>(expectedNGramList);
         assertThat(nGramSet, is(expectedNGramSet));
 
-        // nGramSize > str.length() => empty list
-        nGramList = nGramList("abc");
-        expectedNGramList = new ArrayList<>();
-        assertThat(nGramList, is(expectedNGramList));
+        // nGramSize > str.length() => InputTooShortException
+        assertThrows(InputTooShortException.class, () -> nGramList("abc"));
 
         // nGram padding
         nGramList = nGramList("intiinti", true);

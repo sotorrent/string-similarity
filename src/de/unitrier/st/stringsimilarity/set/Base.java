@@ -1,7 +1,6 @@
 package de.unitrier.st.stringsimilarity.set;
 
 import com.google.common.collect.Sets;
-import de.unitrier.st.stringsimilarity.util.InputTooShortException;
 import org.apache.lucene.search.spell.NGramDistance;
 
 import java.util.HashSet;
@@ -101,13 +100,7 @@ public class Base {
 
     // ngrams
     static double nGramSimilarity(String str1, String str2, int nGramSize,
-                                  BiFunction<Set<String>, Set<String>, Double> coefficient)
-            throws InputTooShortException {
-
-        if (str1.length() < nGramSize ||str2.length() < nGramSize) {
-            throw new InputTooShortException();
-        }
-
+                                  BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> nGramSet1 = nGramSet(str1, nGramSize);
         Set<String> nGramSet2 = nGramSet(str2, nGramSize);
 
@@ -116,13 +109,7 @@ public class Base {
 
     // ngrams + normalization
     static double nGramSimilarityNormalized(String str1, String str2, int nGramSize,
-                                            BiFunction<Set<String>, Set<String>, Double> coefficient)
-            throws InputTooShortException {
-
-        if (str1.length() < nGramSize ||str2.length() < nGramSize) {
-            throw new InputTooShortException();
-        }
-
+                                            BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), nGramSize);
         Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), nGramSize);
 
@@ -131,13 +118,7 @@ public class Base {
 
     // ngrams + normalization + padding
     static double nGramSimilarityNormalizedPadding(String str1, String str2, int nGramSize,
-                                                   BiFunction<Set<String>, Set<String>, Double> coefficient)
-            throws InputTooShortException {
-
-        if (str1.length() < nGramSize ||str2.length() < nGramSize) {
-            throw new InputTooShortException();
-        }
-
+                                                   BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> nGramSet1 = nGramSet(normalizeForNGram(str1), nGramSize, true);
         Set<String> nGramSet2 = nGramSet(normalizeForNGram(str2), nGramSize, true);
 
@@ -146,30 +127,18 @@ public class Base {
 
     // shingles
     static double nShingleSimilarity(String str1, String str2, int shingleSize,
-                                     BiFunction<Set<String>, Set<String>, Double> coefficient)
-            throws InputTooShortException {
-
+                                     BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> shingleSet1 = shingleSet(tokens(str1), DEFAULT_SEPARATOR, shingleSize);
         Set<String> shingleSet2 = shingleSet(tokens(str2), DEFAULT_SEPARATOR, shingleSize);
-
-        if (shingleSet1.size() < shingleSize || shingleSet1.size() < shingleSize) {
-            throw new InputTooShortException();
-        }
 
         return coefficient.apply(shingleSet1, shingleSet2);
     }
 
     // shingles + normalization
     static double nShingleSimilarityNormalized(String str1, String str2, int shingleSize,
-                                               BiFunction<Set<String>, Set<String>, Double> coefficient)
-            throws InputTooShortException {
-
+                                               BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> shingleSet1 = shingleSet(tokens(normalizeForShingle(str1)), DEFAULT_SEPARATOR, shingleSize);
         Set<String> shingleSet2 = shingleSet(tokens(normalizeForShingle(str2)), DEFAULT_SEPARATOR, shingleSize);
-
-        if (shingleSet1.size() < shingleSize || shingleSet1.size() < shingleSize) {
-            throw new InputTooShortException();
-        }
 
         return coefficient.apply(shingleSet1, shingleSet2);
     }
@@ -178,13 +147,7 @@ public class Base {
     // ********** NGRAM SIMILARITY BASED ON KONDRAK05 **********
 
     // ngrams
-    static double nGramSimilarityKondrak05(String str1, String str2, int nGramSize)
-            throws InputTooShortException {
-
-        if (str1.length() < nGramSize ||str2.length() < nGramSize) {
-            throw new InputTooShortException();
-        }
-
+    static double nGramSimilarityKondrak05(String str1, String str2, int nGramSize) {
         return new NGramDistance(nGramSize).getDistance(str1, str2);
     }
 }

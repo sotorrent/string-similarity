@@ -1,6 +1,7 @@
 package de.unitrier.st.stringsimilarity;
 
 import com.google.common.collect.Multiset;
+import de.unitrier.st.stringsimilarity.util.InputTooShortException;
 import de.unitrier.st.stringsimilarity.util.MultisetCollector;
 
 import java.util.List;
@@ -39,30 +40,34 @@ public class Tokenization {
 
     // ********** NGRAMS **********
 
-    public static List<String> nGramList(String str, int nGramSize, boolean padding) {
-        final String finalStr; // for lambda expression
-        final int length;
+    public static List<String> nGramList(String str, int nGramSize, boolean padding) throws InputTooShortException {
+        if (str.length() >= nGramSize) {
+            final String finalStr; // for lambda expression
+            final int length;
 
-        if (padding) {
-            length = str.length()+2*(nGramSize-1);
-            StringBuilder strPadding = new StringBuilder(length);
-            for (int i=0; i<nGramSize-1; i++) {
-                strPadding.append(PADDING_CHAR);
+            if (padding) {
+                length = str.length() + 2 * (nGramSize - 1);
+                StringBuilder strPadding = new StringBuilder(length);
+                for (int i = 0; i < nGramSize - 1; i++) {
+                    strPadding.append(PADDING_CHAR);
+                }
+                strPadding.append(str);
+                for (int i = 0; i < nGramSize - 1; i++) {
+                    strPadding.append(PADDING_CHAR);
+                }
+                finalStr = strPadding.toString();
+            } else {
+                finalStr = str;
+                length = str.length();
             }
-            strPadding.append(str);
-            for (int i=0; i<nGramSize-1; i++) {
-                strPadding.append(PADDING_CHAR);
-            }
-            finalStr = strPadding.toString();
+
+            return IntStream
+                    .range(0, length - nGramSize + 1)
+                    .mapToObj(currentStartPos -> finalStr.substring(currentStartPos, currentStartPos + nGramSize))
+                    .collect(Collectors.toList());
         } else {
-            finalStr = str;
-            length = str.length();
+            throw new InputTooShortException("String length is smaller than nGram size.");
         }
-
-        return IntStream
-                .range(0, length-nGramSize+1)
-                .mapToObj(currentStartPos -> finalStr.substring(currentStartPos, currentStartPos+nGramSize))
-                .collect(Collectors.toList());
     }
 
     public static List<String> nGramList(String str, int nGramSize) {
@@ -115,11 +120,8 @@ public class Tokenization {
 
     // ********** SHINGLES **********
 
-    public static List<String> shingleList(List<String> tokens, String separator, int shingleSize) {
-        if (shingleSize > tokens.size()) {
-            // TODO : What is the correct way to handle this case?
-            throw new IllegalArgumentException("Shingle size longer than number of tokens.");
-        } else {
+    public static List<String> shingleList(List<String> tokens, String separator, int shingleSize) throws InputTooShortException {
+        if (tokens.size() >= shingleSize) {
             return IntStream
                     .range(0, tokens.size()-shingleSize+1)
                     .mapToObj(currentStartPos -> tokens.subList(currentStartPos, currentStartPos+shingleSize))
@@ -127,6 +129,8 @@ public class Tokenization {
                             .stream()
                             .collect(Collectors.joining(separator)))
                     .collect(Collectors.toList());
+        } else {
+            throw new InputTooShortException("Number of tokens is smaller than shingle size.");
         }
     }
 
