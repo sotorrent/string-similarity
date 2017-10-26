@@ -1,5 +1,6 @@
 package de.unitrier.st.stringsimilarity.set;
 
+import de.unitrier.st.stringsimilarity.util.InputTooShortException;
 import org.apache.lucene.search.spell.NGramDistance;
 
 import static de.unitrier.st.stringsimilarity.set.Base.*;
@@ -265,18 +266,34 @@ public class Variants {
     // ********** NGRAM SIMILARITY BASED ON KONDRAK05 **********
 
     public static double twoGramSimilarityKondrak05(String str1, String str2){
+        if (str1.length() < 2 || str2.length() < 2) {
+            throw new InputTooShortException("String length in shorter than nGram size.");
+        }
+
         return twoGramDistance.getDistance(str1, str2);
     }
 
     public static double threeGramSimilarityKondrak05(String str1, String str2){
+        if (str1.length() < 3 || str2.length() < 3) {
+            throw new InputTooShortException("String length in shorter than nGram size.");
+        }
+
         return threeGramDistance.getDistance(str1, str2);
     }
 
     public static double fourGramSimilarityKondrak05(String str1, String str2){
+        if (str1.length() < 4 || str2.length() < 4) {
+            throw new InputTooShortException("String length in shorter than nGram size.");
+        }
+
         return fourGramDistance.getDistance(str1, str2);
     }
 
     public static double fiveGramSimilarityKondrak05(String str1, String str2){
+        if (str1.length() < 5 || str2.length() < 5) {
+            throw new InputTooShortException("String length in shorter than nGram size.");
+        }
+
         return fiveGramDistance.getDistance(str1, str2);
     }
 }
