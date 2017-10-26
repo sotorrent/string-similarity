@@ -5,7 +5,7 @@
 	<name>StringSimilarity</name>
     <groupId>de.unitrier.st</groupId>
     <artifactId>string-similarity</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
     <url>https://github.com/sotorrent/string-similarity</url>
 
     <properties>
