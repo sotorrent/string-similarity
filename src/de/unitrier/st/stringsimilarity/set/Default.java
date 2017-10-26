@@ -1,8 +1,10 @@
 package de.unitrier.st.stringsimilarity.set;
 
+import de.unitrier.st.stringsimilarity.util.InputTooShortException;
 import org.apache.lucene.search.spell.NGramDistance;
 
-import static de.unitrier.st.stringsimilarity.Tokenization.*;
+import static de.unitrier.st.stringsimilarity.Tokenization.NGRAM_SIZE;
+import static de.unitrier.st.stringsimilarity.Tokenization.SHINGLE_SIZE;
 import static de.unitrier.st.stringsimilarity.set.Base.*;
 
 /*
@@ -127,6 +129,10 @@ public class Default {
     }
 
     public static double nGramSimilarityKondrak05(String str1, String str2){
+        if (str1.length() < NGRAM_SIZE || str2.length() < NGRAM_SIZE) {
+            throw new InputTooShortException("String length in shorter than nGram size.");
+        }
+
         return nGramDistance.getDistance(str1, str2);
     }
 
