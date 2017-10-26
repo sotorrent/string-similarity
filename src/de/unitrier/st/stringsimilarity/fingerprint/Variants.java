@@ -59,56 +59,6 @@ public class Variants {
         );
     }
 
-    // ngrams + dice variant
-    public static double winnowingTwoGramDiceVariant(String str1, String str2) {
-        return Base.winnowingNGramSimilarity(str1, str2, 2,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
-    public static double winnowingThreeGramDiceVariant(String str1, String str2) {
-        return Base.winnowingNGramSimilarity(str1, str2, 3,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
-    public static double winnowingFourGramDiceVariant(String str1, String str2) {
-        return Base.winnowingNGramSimilarity(str1, str2, 4,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
-    public static double winnowingFiveGramDiceVariant(String str1, String str2) {
-        return Base.winnowingNGramSimilarity(str1, str2, 5,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
-    // ngrams + dice variant + normalization
-    public static double winnowingTwoGramDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingNGramSimilarityNormalized(str1, str2, 2,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
-    public static double winnowingThreeGramDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingNGramSimilarityNormalized(str1, str2, 3,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
-    public static double winnowingFourGramDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingNGramSimilarityNormalized(str1, str2, 4,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
-    public static double winnowingFiveGramDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingNGramSimilarityNormalized(str1, str2, 5,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
     // ngrams + jaccard
     public static double winnowingTwoGramJaccard(String str1, String str2) {
         return Base.winnowingNGramSimilarity(str1, str2, 2,

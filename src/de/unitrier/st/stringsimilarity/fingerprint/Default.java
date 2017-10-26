@@ -25,20 +25,6 @@ public class Default {
         );
     }
 
-    // ngrams + dice variant
-    public static double winnowingNGramDiceVariant(String str1, String str2) {
-        return Base.winnowingNGramSimilarity(str1, str2, NGRAM_SIZE,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
-    // ngrams + dice variant + normalization
-    public static double winnowingNGramDiceVariantNormalized(String str1, String str2) {
-        return Base.winnowingNGramSimilarityNormalized(str1, str2, NGRAM_SIZE,
-                de.unitrier.st.stringsimilarity.set.Base::diceVariant
-        );
-    }
-
     // ngrams + jaccard
     public static double winnowingNGramJaccard(String str1, String str2) {
         return Base.winnowingNGramSimilarity(str1, str2, NGRAM_SIZE,
