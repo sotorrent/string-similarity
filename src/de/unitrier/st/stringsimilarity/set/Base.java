@@ -53,19 +53,6 @@ public class Base {
         }
     }
 
-
-    // ********** DICE VARIANT **********
-
-    // See paper Duric13
-    public static <T> double diceVariant(Set<T> s1, Set<T> s2) {
-        if (s1.size() == 0 && s2.size() == 0) {
-            return 1.0;
-        } else {
-            return (double) 2 * Sets.intersection(s1, s2).size() / (s1.size() < s2.size() ? s1.size() : s2.size());
-        }
-    }
-
-
     // ********** OVERLAP **********
 
     // https://en.wikipedia.org/wiki/Overlap_coefficient

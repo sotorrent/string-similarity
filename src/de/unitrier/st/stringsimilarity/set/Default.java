@@ -89,39 +89,6 @@ public class Default {
         return nShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::dice);
     }
 
-
-    // ********** DICE VARIANT *********
-
-    // tokens
-    public static double tokenDiceVariant(String str1, String str2) {
-        return tokenSimilarity(str1, str2, Base::diceVariant);
-    }
-
-    // tokens + normalization
-    public static double tokenDiceVariantNormalized(String str1, String str2) {
-        return tokenSimilarityNormalized(str1, str2, Base::diceVariant);
-    }
-
-    // ngrams
-    public static double nGramDiceVariant(String str1, String str2) {
-        return nGramSimilarity(str1, str2, NGRAM_SIZE, Base::diceVariant);
-    }
-
-    // ngrams + normalization
-    public static double nGramDiceVariantNormalized(String str1, String str2) {
-        return nGramSimilarityNormalized(str1, str2, NGRAM_SIZE, Base::diceVariant);
-    }
-
-    // ngrams + normalization + padding
-    public static double nGramDiceVariantNormalizedPadding(String str1, String str2) {
-        return nGramSimilarityNormalizedPadding(str1, str2, NGRAM_SIZE, Base::diceVariant);
-    }
-
-    // shingles
-    public static double nShingleDiceVariant(String str1, String str2) {
-        return nShingleSimilarity(str1, str2, SHINGLE_SIZE, Base::diceVariant);
-    }
-
     // shingles + normalization
     public static double nShingleDiceVariantNormalized(String str1, String str2) {
         return nShingleSimilarityNormalized(str1, str2, SHINGLE_SIZE, Base::dice);
