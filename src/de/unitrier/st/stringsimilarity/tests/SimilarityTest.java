@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Similarity.DELTA_MAX;
 import static de.unitrier.st.stringsimilarity.edit.Variants.*;
-import static de.unitrier.st.stringsimilarity.fingerprint.Default.winnowingNGramDice;
 import static de.unitrier.st.stringsimilarity.fingerprint.Variants.winnowingFourGramDice;
 import static de.unitrier.st.stringsimilarity.profile.Variants.*;
 import static de.unitrier.st.stringsimilarity.set.Variants.*;
@@ -25,7 +24,15 @@ class SimilarityTest {
     private String t1 = "with Hash table entries Hash table entries has Arun name is here, Arun name is here with Hash table entries Arun how is arun";
     private String t2 = "Hash table entries has Arun name is here, Arun name is here with Hash table entries Arun how is arun Arun name is here with Hash table entries";
 
+    @Test
+    void testInputTooShortException() {
+        assertThrows(InputTooShortException.class, () -> twoShingleJaccard("a", "a"));
+
+        assertThrows(InputTooShortException.class, () -> twoGramJaccard("a", "a"));
+    }
+
     // ************************ EDIT-BASED ************************
+
     @Test
     void testLevenshtein() {
         assertEquals(1.0, levenshtein("", ""), DELTA_MAX);
@@ -45,7 +52,8 @@ class SimilarityTest {
         // str2: ""
         // max length: 2
         // levenshtein distance: 2
-        assertEquals((2.0-2.0)/2.0, levenshtein("ab", ""));
+        assertEquals((2.0-2.0)/2.0, levenshtein("ab", ""), DELTA_MAX);
+        assertEquals((2.0-2.0)/2.0, levenshtein("", "ab"), DELTA_MAX);
     }
 
     @Test
@@ -59,9 +67,51 @@ class SimilarityTest {
         assertEquals((69.0-7.0)/69.0, damerauLevenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), DELTA_MAX);
         assertEquals(0.75, damerauLevenshtein("paul", "pual"), DELTA_MAX);
         assertEquals(0.8, damerauLevenshtein("Hello","Hlelo"), DELTA_MAX);
+
+        // str1: "ab"
+        // str2: ""
+        // max length: 2
+        // damerau-levenshtein distance: 2
+        assertEquals((2.0-2.0)/2.0, damerauLevenshtein("ab", ""));
+        assertEquals((2.0-2.0)/2.0, damerauLevenshtein("", "ab"));
+    }
+
+    @Test
+    void testOptimalStringAlignment() {
+        assertEquals(1.0, optimalAlignment("", ""), DELTA_MAX);
+        assertEquals(0.75, optimalAlignment("paul", "pual"), DELTA_MAX);
+
+        // str1: "ab"
+        // str2: ""
+        // max length: 2
+        // longestCommonSubsequence similarity: 2
+        assertEquals((2.0-2.0)/2.0, optimalAlignment("ab", ""), DELTA_MAX);
+        assertEquals((2.0-2.0)/2.0, optimalAlignment("", "ab"), DELTA_MAX);
+    }
+
+    @Test
+    void testLongestCommonSubsequence() {
+        // str1 is  "Please divide this Sentence, into Tokens or nGrams or Shingles"            => 62 Characters
+        // str2 is  "Please do not divide this sentence, into Tokens or nGrams or shingles"     => 69 Characters
+        // LCS is   "Please divide this entence, into Tokens or nGrams or hingles"              => 60 Characters
+
+        assertEquals(60.0/69, longestCommonSubsequence(str1,str2), DELTA_MAX);
+
+        assertEquals(0.6, longestCommonSubsequence("ABCDEFG","ABCDEFHJKL"), DELTA_MAX);
+
+        assertEquals(1.0, longestCommonSubsequence("", ""), DELTA_MAX);
+        assertEquals(0.75, longestCommonSubsequence("paul", "pual"), DELTA_MAX);
+
+        // str1: "ab"
+        // str2: ""
+        // max length: 2
+        // longestCommonSubsequence similarity: 0
+        assertEquals(0.0, longestCommonSubsequence("ab", ""), DELTA_MAX);
+        assertEquals(0.0, longestCommonSubsequence("", "ab"), DELTA_MAX);
     }
 
     // ************************ SET-BASED ************************
+
     @Test
     void testSetBased(){
         assertEquals(15./24, fourGramJaccard(s1,s2), DELTA_MAX);
@@ -87,7 +137,42 @@ class SimilarityTest {
         // "Hallo Wlt" -> "Hall", "allo", "llo ", "lo W", "o Wl", "o Wlt"
         // -> Union: 9, Intersection: 4 -> 4/9=0.444...
         assertEquals(4.0/9, fourGramJaccard("Hallo Welt", "Hallo Wlt"), DELTA_MAX);
+
+        assertThrows(InputTooShortException.class, () -> fourGramSimilarityKondrak05("ab", ""));
+        assertThrows(InputTooShortException.class, () -> fourGramSimilarityKondrak05("", "ab"));
     }
+
+    @Test
+    void testNGramSimilarityKondrak05(){
+        // ("hall", "allo", "llow", "lowe", "lowo")
+        // str1: "hallowe" -> "hall", "allo", "llow", "lowe" -> (1, 1, 1, 1, 0)
+        // str2: "hallowo" -> "hall", "allo", "llow", "lowo" -> (1, 1, 1, 0, 1)
+        // manhattan = |1-1| + |1-1| + |1-1| + |1-0| + |0-1| = 2
+        // length1 = 4
+        // length2 = 4
+        // sim = 1 - 2/(4+4) = 1 - 1/4 = 0.75
+
+        assertEquals(1 - 1.0/4, manhattanFourGramNormalized("hallowe", "hallowo"), DELTA_MAX);
+
+        assertThrows(InputTooShortException.class, () -> fourGramSimilarityKondrak05("ab", ""));
+        assertThrows(InputTooShortException.class, () -> fourGramSimilarityKondrak05("", "ab"));
+
+        assertEquals(0.8659420013427734, fourGramSimilarityKondrak05(str1, str2), DELTA_MAX);
+        assertEquals(0.8571428656578064, fourGramSimilarityKondrak05(s1, s2), DELTA_MAX);
+        assertEquals(0.5246478915214539, fourGramSimilarityKondrak05(t1, t2), DELTA_MAX);
+
+        assertEquals(1.0, fourGramSimilarityKondrak05(str1, str1), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(str2, str2), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(s1, s1), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(s2, s2), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(t1, t1), DELTA_MAX);
+        assertEquals(1.0, fourGramSimilarityKondrak05(t2, t2), DELTA_MAX);
+
+        assertThrows(InputTooShortException.class, () -> fourGramSimilarityKondrak05("ab", ""));
+        assertThrows(InputTooShortException.class, () -> fourGramSimilarityKondrak05("", "ab"));
+    }
+
+    // ************************ PROFILE-BASED ************************
 
     @Test
     void testCosine(){
@@ -115,32 +200,12 @@ class SimilarityTest {
 
         // check for rounding errors
         assertEquals(1.0, cosineFourGramNormalizedTermFrequency("Please", "Please"), DELTA_MAX);
+
+        assertThrows(InputTooShortException.class, () -> cosineFourGramNormalizedTermFrequency("ab", ""));
+        assertThrows(InputTooShortException.class, () -> cosineFourGramNormalizedTermFrequency("", "ab"));
     }
 
-    @Test
-    void testQGram() {
-        // ("hall", "allo", "llow", "lowe", "lowo")
-        // str1: "hallowe" -> "hall", "allo", "llow", "lowe" -> (1, 1, 1, 1, 0)
-        // str2: "hallowo" -> "hall", "allo", "llow", "lowo" -> (1, 1, 1, 0, 1)
-        // manhattan = |1-1| + |1-1| + |1-1| + |1-0| + |0-1| = 2
-        // length1 = 4
-        // length2 = 4
-        // sim = 1 - 2/(4+4) = 1 - 1/4 = 0.75
-
-        assertEquals(1 - 1.0/4, manhattanFourGramNormalized("hallowe", "hallowo"), DELTA_MAX);
-    }
-
-    @Test
-    void testLCS(){
-        // str1 is  "Please divide this Sentence, into Tokens or nGrams or Shingles"            => 62 Characters
-        // str2 is  "Please do not divide this sentence, into Tokens or nGrams or shingles"     => 69 Characters
-        // LCS is   "Please divide this entence, into Tokens or nGrams or hingles"              => 60 Characters
-
-        assertEquals(60.0/69, longestCommonSubsequence(str1,str2), DELTA_MAX);
-
-        assertEquals(0.6, longestCommonSubsequence("ABCDEFG","ABCDEFHJKL"), DELTA_MAX);
-    }
-
+    // ************************ FINGERPRINT-BASED ************************
 
     @Test
     void testWinnowing(){
@@ -151,40 +216,11 @@ class SimilarityTest {
 
         assertEquals(4.0/6, winnowingFourGramDice(s1,s2), DELTA_MAX);
 
-        double sim = winnowingNGramDice("public Node(int n)", "public Node(int v)");
+        double sim = winnowingFourGramDice("public Node(int n)", "public Node(int v)");
         assertEquals(1.0, sim, DELTA_MAX);
+
+        assertThrows(InputTooShortException.class, () -> winnowingFourGramDice("ab", ""));
+        assertThrows(InputTooShortException.class, () -> winnowingFourGramDice("", "ab"));
     }
 
-    @Test
-    void testNGramSimilarityKondrak05(){
-        assertEquals(0.8659420013427734, fourGramSimilarityKondrak05(str1, str2), DELTA_MAX);
-        assertEquals(0.8571428656578064, fourGramSimilarityKondrak05(s1, s2), DELTA_MAX);
-        assertEquals(0.5246478915214539, fourGramSimilarityKondrak05(t1, t2), DELTA_MAX);
-
-        assertEquals(1.0, fourGramSimilarityKondrak05(str1, str1), DELTA_MAX);
-        assertEquals(1.0, fourGramSimilarityKondrak05(str2, str2), DELTA_MAX);
-        assertEquals(1.0, fourGramSimilarityKondrak05(s1, s1), DELTA_MAX);
-        assertEquals(1.0, fourGramSimilarityKondrak05(s2, s2), DELTA_MAX);
-        assertEquals(1.0, fourGramSimilarityKondrak05(t1, t1), DELTA_MAX);
-        assertEquals(1.0, fourGramSimilarityKondrak05(t2, t2), DELTA_MAX);
-    }
-
-    @Test
-    void testOptimalStringAlignment() {
-        assertEquals(1.0, optimalAlignment("", ""), DELTA_MAX);
-        assertEquals(0.75, optimalAlignment("paul", "pual"), DELTA_MAX);
-    }
-
-    @Test
-    void testLongestCommonSubsequence() {
-        assertEquals(1.0, longestCommonSubsequence("", ""), DELTA_MAX);
-        assertEquals(0.75, longestCommonSubsequence("paul", "pual"), DELTA_MAX);
-    }
-
-    @Test
-    void testInputTooShortException() {
-        assertThrows(InputTooShortException.class, () -> twoShingleJaccard("a", "a"));
-
-        assertThrows(InputTooShortException.class, () -> twoGramJaccard("a", "a"));
-    }
 }
