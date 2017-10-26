@@ -34,7 +34,7 @@ public class Base {
         }
 
         // ensure space in O(min(n,m))
-        if (m>n) {
+        if (n>m) {
             String tmpStr = str1;
             str1 = str2;
             str2 = tmpStr;
