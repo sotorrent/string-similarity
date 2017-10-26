@@ -14,7 +14,8 @@ public class Normalization {
     }
 
     public static String removeSpecialChars(String str) {
-        return str.replaceAll("[{};]", ""); // TODO: Other characters?
+        // TODO: Other characters?
+        return str.replaceAll("[{};]", "");
     }
 
     public static String replaceNonWordChars(String str) {
