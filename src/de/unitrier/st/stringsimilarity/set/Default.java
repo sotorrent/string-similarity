@@ -16,6 +16,19 @@ public class Default {
     // needed for nGramSimilarityKondrak05
     private static NGramDistance nGramDistance = new NGramDistance(NGRAM_SIZE);
 
+    // ********** EQUALS ***********
+
+    // tokens
+    public static double tokenEquals(String str1, String str2) {
+        return tokenSimilarity(str1, str2, Base::equals);
+    }
+
+    // tokens + normalization
+    public static double tokenEqualsNormalized(String str1, String str2) {
+        return tokenSimilarityNormalized(str1, str2, Base::equals);
+    }
+
+
     // ********** JACCARD **********
 
     // tokens

@@ -29,6 +29,15 @@ public class Base {
         return new HashSet<>(stringList);
     }
 
+    // ********** EQUALS **********
+
+    public static <T> double equals(Set<T> s1, Set<T> s2) {
+        if (s1.size() == 0 && s2.size() == 0) {
+            return 1.0;
+        } else {
+            return s1.equals(s2) ? 1.0 : 0.0;
+        }
+    }
 
     // ********** JACCARD **********
 
