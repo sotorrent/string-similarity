@@ -14,7 +14,7 @@ import static de.unitrier.st.stringsimilarity.set.Base.*;
  */
 public class Default {
     // needed for nGramSimilarityKondrak05
-    private static NGramDistance nGramDistance = new NGramDistance(NGRAM_SIZE);
+    private final static NGramDistance nGramDistance = new NGramDistance(NGRAM_SIZE);
 
     // ********** EQUALS ***********
 

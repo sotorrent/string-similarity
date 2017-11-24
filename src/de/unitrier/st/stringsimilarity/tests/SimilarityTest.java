@@ -18,11 +18,11 @@ class SimilarityTest {
     private static final String str1 = "Please divide this Sentence, into Tokens or nGrams or Shingles";
     private static final String str2 = "Please do not divide this sentence, into Tokens or nGrams or shingles";
 
-    private String s1 = "public String f(String s)";
-    private String s2 = "public String func(String s)";
+    private final String s1 = "public String f(String s)";
+    private final String s2 = "public String func(String s)";
 
-    private String t1 = "with Hash table entries Hash table entries has Arun name is here, Arun name is here with Hash table entries Arun how is arun";
-    private String t2 = "Hash table entries has Arun name is here, Arun name is here with Hash table entries Arun how is arun Arun name is here with Hash table entries";
+    private final String t1 = "with Hash table entries Hash table entries has Arun name is here, Arun name is here with Hash table entries Arun how is arun";
+    private final String t2 = "Hash table entries has Arun name is here, Arun name is here with Hash table entries Arun how is arun Arun name is here with Hash table entries";
 
     @Test
     void testInputTooShortException() {
