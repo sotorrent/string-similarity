@@ -12,8 +12,6 @@ import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForNGram;
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForShingle;
 import static de.unitrier.st.stringsimilarity.Tokenization.*;
-import static de.unitrier.st.stringsimilarity.Tokenization.SHINGLE_SIZE;
-import static de.unitrier.st.stringsimilarity.Tokenization.shingleMultiset;
 import static de.unitrier.st.stringsimilarity.util.MultisetCollector.toMultiset;
 
 /*

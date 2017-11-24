@@ -12,10 +12,10 @@ import static de.unitrier.st.stringsimilarity.set.Base.*;
  */
 public class Variants {
 
-    private static NGramDistance twoGramDistance = new NGramDistance(2);
-    private static NGramDistance threeGramDistance = new NGramDistance(3);
-    private static NGramDistance fourGramDistance = new NGramDistance(4);
-    private static NGramDistance fiveGramDistance = new NGramDistance(5);
+    private final static NGramDistance twoGramDistance = new NGramDistance(2);
+    private final static NGramDistance threeGramDistance = new NGramDistance(3);
+    private final static NGramDistance fourGramDistance = new NGramDistance(4);
+    private final static NGramDistance fiveGramDistance = new NGramDistance(5);
 
     // ********** EQUALS **********
 
