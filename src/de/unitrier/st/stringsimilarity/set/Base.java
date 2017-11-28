@@ -29,16 +29,6 @@ public class Base {
         return new HashSet<>(stringList);
     }
 
-    // ********** EQUALS **********
-
-    public static <T> double equals(Set<T> s1, Set<T> s2) {
-        if (s1.size() == 0 && s2.size() == 0) {
-            return 1.0;
-        } else {
-            return s1.equals(s2) ? 1.0 : 0.0;
-        }
-    }
-
     // ********** JACCARD **********
 
     // https://en.wikipedia.org/wiki/Jaccard_index
@@ -77,7 +67,7 @@ public class Base {
     // ********** BASE VARIANTS **********
 
     // tokens
-    static double tokenSimilarity(String str1, String str2,
+    public static double tokenSimilarity(String str1, String str2,
                                          BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> nGramSet1 = listToSet(tokens(str1));
         Set<String> nGramSet2 = listToSet(tokens(str2));
@@ -86,7 +76,7 @@ public class Base {
     }
 
     // tokens + normalization
-    static double tokenSimilarityNormalized(String str1, String str2,
+    public static double tokenSimilarityNormalized(String str1, String str2,
                                                    BiFunction<Set<String>, Set<String>, Double> coefficient) {
         Set<String> nGramSet1 = nGramSet(normalizeForEdit(str1));
         Set<String> nGramSet2 = nGramSet(normalizeForEdit(str2));

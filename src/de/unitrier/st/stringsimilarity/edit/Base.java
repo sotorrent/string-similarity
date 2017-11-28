@@ -13,20 +13,6 @@ import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
  */
 public class Base {
     /*
-     * Similarity metric based on String equality.
-     */
-    static double equals(String str1, String str2) {
-        return str1.equals(str2) ? 1.0 : 0.0;
-    }
-
-    /*
-     * Similarity metric based on String equality and normalization.
-     */
-    static double equalsNormalized(String str1, String str2) {
-        return normalizeForEdit(str1).equals(normalizeForEdit(str2)) ? 1.0 : 0.0;
-    }
-
-    /*
      * Jaro-Winkler excluded because it is optimized for single words.
      * See: https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance
      */
