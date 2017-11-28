@@ -17,19 +17,6 @@ public class Variants {
     private final static NGramDistance fourGramDistance = new NGramDistance(4);
     private final static NGramDistance fiveGramDistance = new NGramDistance(5);
 
-    // ********** EQUALS **********
-
-    // tokens
-    public static double tokenEquals(String str1, String str2) {
-        return Default.tokenEquals(str1, str2);
-    }
-
-    // tokens + normalization
-    public static double tokenEqualsNormalized(String str1, String str2) {
-        return Default.tokenEqualsNormalized(str1, str2);
-    }
-
-
     // ********** JACCARD **********
 
     // tokens

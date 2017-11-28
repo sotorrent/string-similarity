@@ -9,17 +9,6 @@ import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
  */
 public class Variants {
 
-    // ********** EQUALS **********
-
-    public static double equals(String str1, String str2) {
-        return Base.equals(str1, str2);
-    }
-
-    public static double equalsNormalized(String str1, String str2) {
-        return Base.equalsNormalized(str1, str2);
-    }
-
-
     // ********** LEVENSHTEIN **********
 
     public static double levenshtein(String str1, String str2) {
