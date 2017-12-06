@@ -1,6 +1,6 @@
 package de.unitrier.st.stringsimilarity.tests;
 
-import de.unitrier.st.stringsimilarity.util.InputTooShortException;
+import de.unitrier.st.util.InputTooShortException;
 import org.junit.jupiter.api.Test;
 
 import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
