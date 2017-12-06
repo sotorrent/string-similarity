@@ -1,6 +1,6 @@
 package de.unitrier.st.stringsimilarity.set;
 
-import de.unitrier.st.stringsimilarity.util.InputTooShortException;
+import de.unitrier.st.util.InputTooShortException;
 import org.apache.lucene.search.spell.NGramDistance;
 
 import static de.unitrier.st.stringsimilarity.Tokenization.NGRAM_SIZE;

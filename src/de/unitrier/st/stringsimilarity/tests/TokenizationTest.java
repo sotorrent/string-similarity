@@ -1,8 +1,8 @@
 package de.unitrier.st.stringsimilarity.tests;
 
 import com.google.common.collect.Multiset;
-import de.unitrier.st.stringsimilarity.util.InputTooShortException;
-import de.unitrier.st.stringsimilarity.util.MultisetCollector;
+import de.unitrier.st.util.InputTooShortException;
+import de.unitrier.st.util.MultisetCollector;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
