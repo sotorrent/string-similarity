@@ -86,7 +86,7 @@ class TokenizationTest {
 
     @Test
     void testShingleTokenization() {
-        assertEquals(3, SHINGLE_SIZE);
+        assertEquals(2, SHINGLE_SIZE);
 
         String normalizedStr = normalizeForShingle(str);
 
@@ -97,12 +97,12 @@ class TokenizationTest {
 
         // Shingle List
         List<String> shingleList = shingleList(tokens);
-        List<String> expectedShingleList = Arrays.asList("main string args", "string args print", "args print test", "print test exit", "test exit 0");
+        List<String> expectedShingleList = Arrays.asList("main string", "string args", "args print", "print test", "test exit", "exit 0");
         assertThat(shingleList, is(expectedShingleList));
 
         normalizedStr = normalizeForShingle("int i; int i; String str");
         shingleList = shingleList(tokens(normalizedStr));
-        expectedShingleList = Arrays.asList("int i int", "i int i", "int i string", "i string str");
+        expectedShingleList = Arrays.asList("int i", "i int", "int i", "i string", "string str");
 
         // Shingle Multiset
         Multiset<String> shingleMultiset = shingleList.stream().collect(MultisetCollector.toMultiset());

@@ -18,11 +18,11 @@ public class Tokenization {
      * From paper Burrows07: "Chawla [5] identified the most appropriate size of n-grams for his PlagiIndex system to
      * be four, and we use this size for our approach.
      */
-    public static final int NGRAM_SIZE = 4;   // TODO : choose best nGram size based on evaluation
+    public static final int NGRAM_SIZE = 4;
     /*
      * "Shingles are effectively word-nGrams." (https://www.elastic.co/blog/searching-with-shingles)
      */
-    public static final int SHINGLE_SIZE = 3;   // TODO : choose best shingle size based on evaluation
+    public static final int SHINGLE_SIZE = 2;
 
 
     // ********** TOKENS **********
