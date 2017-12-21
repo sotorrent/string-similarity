@@ -69,19 +69,19 @@ public class Base {
     // tokens
     public static double tokenSimilarity(String str1, String str2,
                                          BiFunction<Set<String>, Set<String>, Double> coefficient) {
-        Set<String> nGramSet1 = listToSet(tokens(str1));
-        Set<String> nGramSet2 = listToSet(tokens(str2));
+        Set<String> tokenSet1 = listToSet(tokens(str1));
+        Set<String> tokenSet2 = listToSet(tokens(str2));
 
-        return coefficient.apply(nGramSet1, nGramSet2);
+        return coefficient.apply(tokenSet1, tokenSet2);
     }
 
     // tokens + normalization
     public static double tokenSimilarityNormalized(String str1, String str2,
                                                    BiFunction<Set<String>, Set<String>, Double> coefficient) {
-        Set<String> nGramSet1 = nGramSet(normalizeForEdit(str1));
-        Set<String> nGramSet2 = nGramSet(normalizeForEdit(str2));
+        Set<String> tokenSet1 = listToSet(tokens(normalizeForEdit(str1)));
+        Set<String> tokenSet2 = listToSet(tokens(normalizeForEdit(str2)));
 
-        return coefficient.apply(nGramSet1, nGramSet2);
+        return coefficient.apply(tokenSet1, tokenSet2);
     }
 
     // ngrams
