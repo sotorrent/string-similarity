@@ -1,5 +1,7 @@
 package de.unitrier.st.stringsimilarity;
 
+// TODO: add method to normalize text blocks by a stemmer, e.g. the Porter Stemmer http://snowball.tartarus.org/algorithms/english/stemmer.html
+
 public class Normalization {
     public static String removeWhitespaces(String str) {
         return str.replaceAll("\\s+","");  // http://stackoverflow.com/questions/5455794/removing-whitespace-from-strings-in-java
