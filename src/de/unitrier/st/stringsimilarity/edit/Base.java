@@ -30,7 +30,18 @@ public class Base {
         int m = str2.length();
 
         if (n==0 && m==0) {
-            return 1.0; // empty strings have similarity 1
+            return 1.0; // empty strings have similarity 1.0
+        }
+
+        return (double) (Math.max(n, m) - levenshteinDistance(str1, str2)) / Math.max(n, m);
+    }
+
+    public static int levenshteinDistance(String str1, String str2) {
+        int n = str1.length();
+        int m = str2.length();
+
+        if (n==0 && m==0) {
+            return 0; // empty strings have edit distance 0
         }
 
         // ensure space in O(min(n,m))
@@ -72,7 +83,7 @@ public class Base {
             current_row = tmp;
         }
 
-        return (double) (Math.max(n, m) - previous_row[m]) / Math.max(n, m);
+        return previous_row[m];
     }
 
     /*
