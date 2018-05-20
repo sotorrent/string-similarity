@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static de.unitrier.st.stringsimilarity.Normalization.normalizeForEdit;
-import static de.unitrier.st.stringsimilarity.Normalization.normalizeForNGram;
-import static de.unitrier.st.stringsimilarity.Normalization.normalizeForShingle;
+import static de.unitrier.st.stringsimilarity.Normalization.*;
 import static de.unitrier.st.stringsimilarity.Tokenization.*;
-import static de.unitrier.st.util.MultisetCollector.toMultiset;
+import static de.unitrier.st.util.collections.MultisetCollector.toMultiset;
 
 /*
  * Profile-based similarity metrics.

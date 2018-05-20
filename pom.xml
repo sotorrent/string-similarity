@@ -34,7 +34,7 @@
         <junit.jupiter.version>5.1.1</junit.jupiter.version>
         <hamcrest.junit.version>2.0.0.0</hamcrest.junit.version>
         <!-- Other dependencies -->
-        <util.version>1.0.7</util.version>
+        <util.version>2.0.1</util.version>
         <lucene-spellchecker.version>3.6.2</lucene-spellchecker.version>
         <guava.version>24.1-jre</guava.version>
     </properties>
