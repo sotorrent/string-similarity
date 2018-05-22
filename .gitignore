@@ -42,3 +42,4 @@ target/
 # Misc #
 ########
 *.log
+releases/
