@@ -1,5 +1,3 @@
-package org.sotorrent.stringsimilarity.tests;
-
 import com.google.common.collect.Multiset;
 import org.junit.jupiter.api.Test;
 import org.sotorrent.util.collections.MultisetCollector;

@@ -1,5 +1,3 @@
-package org.sotorrent.stringsimilarity.tests;
-
 import org.junit.jupiter.api.Test;
 
 import static org.sotorrent.stringsimilarity.Normalization.*;
