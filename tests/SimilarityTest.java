@@ -37,11 +37,11 @@ class SimilarityTest {
         assertEquals(1.0, levenshtein("", ""), Similarity.DELTA_MAX);
         assertEquals(1.0, levenshtein("Hello","Hello"), Similarity.DELTA_MAX);
 
-        // str1 normalized: "please divide this sentence, into tokens or ngrams or shingles"
-        // str2 normalized: "please do not divide this sentence, into tokens or ngrams or shingles"
-        // max length: 69
+        // str1 normalized: "please divide this sentence into tokens or ngrams or shingles"
+        // str2 normalized: "please do not divide this sentence into tokens or ngrams or shingles"
+        // max length: 68
         // levenshtein distance: 7
-        assertEquals((69.0-7.0)/69.0, levenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), Similarity.DELTA_MAX);
+        assertEquals((68.0-7.0)/68.0, levenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), Similarity.DELTA_MAX);
         assertEquals(0.5, levenshtein("paul", "pual"), Similarity.DELTA_MAX);
         assertEquals(0.2, levenshtein("Hello","Ola"), Similarity.DELTA_MAX);
 
@@ -59,11 +59,11 @@ class SimilarityTest {
     void testDamerauLevenshtein() {
         assertEquals(1.0, damerauLevenshtein("", ""), Similarity.DELTA_MAX);
         assertEquals(1.0, damerauLevenshtein("Hello","Hello"), Similarity.DELTA_MAX);
-        // str1 normalized: "please divide this sentence, into tokens or ngrams or shingles"
-        // str2 normalized: "please do not divide this sentence, into tokens or ngrams or shingles"
-        // max length: 69
+        // str1 normalized: "please divide this sentence into tokens or ngrams or shingles"
+        // str2 normalized: "please do not divide this sentence into tokens or ngrams or shingles"
+        // max length: 68
         // damerau-levenshtein distance: 7
-        assertEquals((69.0-7.0)/69.0, damerauLevenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), Similarity.DELTA_MAX);
+        assertEquals((68.0-7.0)/68.0, damerauLevenshtein(normalizeForEdit(str1), normalizeForEdit(str2)), Similarity.DELTA_MAX);
         assertEquals(0.75, damerauLevenshtein("paul", "pual"), Similarity.DELTA_MAX);
         assertEquals(0.8, damerauLevenshtein("Hello","Hlelo"), Similarity.DELTA_MAX);
 
@@ -175,34 +175,52 @@ class SimilarityTest {
 
     @Test
     void testCosine(){
-        // publ ubli blic lics icst cstr stri trin ring ingf ngf( gf(S f(st (str stri trin ring ings ngs)
-        // publ ubli blic lics icst cstr stri trin ring ingf ngfu gfun func unc( nc(s c(st (str stri trin ring ings ngs)
+        // publ ubli blic lics icst cstr stri trin ring ingf ngfs      gfst fstr                          stri trin ring ings)
+        // publ ubli blic lics icst cstr stri trin ring ingf      ngfu           gfun func uncs ncst cstr stri trin ring ings)
+
+        // publ ubli blic lics icst cstr stri trin ring ingf ngfs ngfu gfst fstr gfun func uncs ncst ings)
+        //    1    1    1    1    1    1    2    2    2    1    1    0    1    1    0    0    0    0    1
+        //    1    1    1    1    1    2    2    2    2    1    0    1    0    0    1    1    1    1    1
 
         // scalar product:
-        // TF: 22
-        // BOOL: 13
+        // TF: 21
+        // BOOL: 11
 
         // Length string 1:
-        // TF: sqrt(25) = 5
-        // BOOL: sqrt(16) = 4
+        // TF: sqrt(23) = 4.80
+        // BOOL: sqrt(14) = 3.74
 
         // Length string 2
-        // TF: sqrt(28) = 5.292
-        // BOOL: sqrt(19) = 4.359
+        // TF: sqrt(28) = 5.29
+        // BOOL: sqrt(16) = 4
 
         // cosine similarity
-        // TF: 22/(5*sqrt(28)) = 0.831
-        // BOOL: 13/(4*sqrt(19)) = 0.746
+        // TF: 21/(sqrt(23)*sqrt(28)) = 0.83
+        // BOOL: 11/(sqrt(14)*sqrt(16)) = 0.73
 
-        Assertions.assertEquals(22/(5*Math.sqrt(28)), Variants.cosineFourGramNormalizedTermFrequency(s1, s2), Similarity.DELTA_MAX);
-        Assertions.assertEquals(13/(4*Math.sqrt(19)), Variants.cosineFourGramNormalizedBool(s1, s2), Similarity.DELTA_MAX);
+        //private final String s1 = "publicstringfstrings";
+        //private final String s2 = "publicstringfuncstrings";
+
+        Assertions.assertEquals(21/(Math.sqrt(23)*Math.sqrt(28)), Variants.cosineFourGramNormalizedTermFrequency(s1, s2), Similarity.DELTA_MAX);
+        Assertions.assertEquals(11/(Math.sqrt(14)*Math.sqrt(16)), Variants.cosineFourGramNormalizedBool(s1, s2), Similarity.DELTA_MAX);
 
         // check for rounding errors
         Assertions.assertEquals(1.0, Variants.cosineFourGramNormalizedTermFrequency("Please", "Please"), Similarity.DELTA_MAX);
 
         assertThrows(InputTooShortException.class, () -> Variants.cosineFourGramNormalizedTermFrequency("ab", ""));
         assertThrows(InputTooShortException.class, () -> Variants.cosineFourGramNormalizedTermFrequency("", "ab"));
+
+        // Stack Overflow question 38463455, version 3 compared to 4
+        assertTrue(org.sotorrent.stringsimilarity.profile.Variants.cosineTokenNormalizedTermFrequency("to", "to:") > 0.0);
     }
+
+    @Test
+    void testManhattan() {
+
+        // Stack Overflow question 38463455, version 3 compared to 4
+        assertThrows(InputTooShortException.class, () -> org.sotorrent.stringsimilarity.profile.Variants.manhattanFourGramNormalized("to", "to:"));
+    }
+
 
     // ************************ FINGERPRINT-BASED ************************
 

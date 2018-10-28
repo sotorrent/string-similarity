@@ -17,7 +17,7 @@ public class Normalization {
 
     public static String removeSpecialChars(String str) {
         // TODO: Other characters?
-        return str.replaceAll("[{};]", "");
+        return str.replaceAll("[{},;.:´`'\"\\-+*/~#_<>|!§$%&\\\\()\\[\\]=°]", "");
     }
 
     public static String replaceNonWordChars(String str) {
@@ -28,7 +28,7 @@ public class Normalization {
 
     // -> for edit metrics
     public static String normalizeForEdit(String str) {
-        return unifyWhitespaces(toLowerCase(str));
+        return unifyWhitespaces(removeSpecialChars(toLowerCase(str)));
     }
 
 

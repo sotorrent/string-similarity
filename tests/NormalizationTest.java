@@ -28,19 +28,19 @@ class NormalizationTest {
     @Test
     void testRemoveSpecialChars(){
         String strNorm = removeSpecialChars(str);
-        assertEquals("main(String[] args)  \n print('Test')\n\texit(0) ", strNorm);
+        assertEquals("mainString args  \n printTest\n\texit0 ", strNorm);
     }
 
     @Test
     void testNormalizeForEdit(){
         String strNorm = normalizeForEdit(str);
-        assertEquals("main(string[] args) { print('test'); exit(0); }", strNorm);
+        assertEquals("mainstring args printtest exit0 ", strNorm);
     }
 
     @Test
     void testNormalizeForNGram(){
         String strNorm = normalizeForNGram(str);
-        assertEquals("main(string[]args)print('test')exit(0)", strNorm);
+        assertEquals("mainstringargsprinttestexit0", strNorm);
     }
 
     @Test
