@@ -175,34 +175,27 @@ class SimilarityTest {
 
     @Test
     void testCosine(){
-        // publ ubli blic lics icst cstr stri trin ring ingf ngfs      gfst fstr                          stri trin ring ings)
-        // publ ubli blic lics icst cstr stri trin ring ingf      ngfu           gfun func uncs ncst cstr stri trin ring ings)
-
-        // publ ubli blic lics icst cstr stri trin ring ingf ngfs ngfu gfst fstr gfun func uncs ncst ings)
-        //    1    1    1    1    1    1    2    2    2    1    1    0    1    1    0    0    0    0    1
-        //    1    1    1    1    1    2    2    2    2    1    0    1    0    0    1    1    1    1    1
+        // publ ubli blic lics icst cstr stri trin ring ingf ngf( gf(S f(st                               (str stri trin ring ings ngs)
+        // publ ubli blic lics icst cstr stri trin ring ingf                ngfu gfun func unc( nc(s c(st (str stri trin ring ings ngs)
 
         // scalar product:
-        // TF: 21
-        // BOOL: 11
+        // TF: 22
+        // BOOL: 13
 
         // Length string 1:
-        // TF: sqrt(23) = 4.80
-        // BOOL: sqrt(14) = 3.74
-
-        // Length string 2
-        // TF: sqrt(28) = 5.29
+        // TF: sqrt(25) = 5
         // BOOL: sqrt(16) = 4
 
+        // Length string 2
+        // TF: sqrt(28) = 5.292
+        // BOOL: sqrt(19) = 4.359
+
         // cosine similarity
-        // TF: 21/(sqrt(23)*sqrt(28)) = 0.83
-        // BOOL: 11/(sqrt(14)*sqrt(16)) = 0.73
+        // TF: 22/(5*sqrt(28)) = 0.831
+        // BOOL: 13/(4*sqrt(19)) = 0.746
 
-        //private final String s1 = "publicstringfstrings";
-        //private final String s2 = "publicstringfuncstrings";
-
-        Assertions.assertEquals(21/(Math.sqrt(23)*Math.sqrt(28)), Variants.cosineFourGramNormalizedTermFrequency(s1, s2), Similarity.DELTA_MAX);
-        Assertions.assertEquals(11/(Math.sqrt(14)*Math.sqrt(16)), Variants.cosineFourGramNormalizedBool(s1, s2), Similarity.DELTA_MAX);
+        Assertions.assertEquals(22/(5*Math.sqrt(28)), Variants.cosineFourGramNormalizedTermFrequency(s1, s2), Similarity.DELTA_MAX);
+        Assertions.assertEquals(13/(4*Math.sqrt(19)), Variants.cosineFourGramNormalizedBool(s1, s2), Similarity.DELTA_MAX);
 
         // check for rounding errors
         Assertions.assertEquals(1.0, Variants.cosineFourGramNormalizedTermFrequency("Please", "Please"), Similarity.DELTA_MAX);

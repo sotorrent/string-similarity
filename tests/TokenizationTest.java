@@ -41,13 +41,13 @@ class TokenizationTest {
 
         // Tokenization
         List<String> expectedTokens = new ArrayList<>();
-        expectedTokens.add("mainstringargsprinttestexit0");
+        expectedTokens.add("main(string[]args)print('test')exit(0)");
         List<String> tokens = tokens(normalizedStr);
         assertThat(tokens, is(expectedTokens));
 
         // nGram List
         List<String> nGramList = nGramList(normalizedStr);
-        List<String> expectedNGramList10 = Arrays.asList("main", "ains", "inst", "nstr", "stri", "trin", "ring", "inga", "ngar", "garg");
+        List<String> expectedNGramList10 = Arrays.asList("main", "ain(", "in(s", "n(st", "(str", "stri", "trin", "ring", "ing[", "ng[]");
         assertThat(nGramList.subList(0, 10), is(expectedNGramList10));
 
         nGramList = nGramList(normalizeForNGram("int i; int i;"));
