@@ -30,7 +30,7 @@
         <!-- Other dependencies -->
         <util.version>LATEST</util.version>
         <lucene-spellchecker.version>LATEST</lucene-spellchecker.version>
-        <guava.version>LATEST</guava.version>
+        <guava.version>27.0-jre</guava.version>
     </properties>
 
     <distributionManagement>
