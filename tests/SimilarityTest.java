@@ -4,6 +4,7 @@ import org.sotorrent.stringsimilarity.Similarity;
 import org.sotorrent.stringsimilarity.profile.Variants;
 import org.sotorrent.util.exceptions.InputTooShortException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.sotorrent.stringsimilarity.Normalization.normalizeForEdit;
 import static org.sotorrent.stringsimilarity.edit.Variants.*;
 import static org.sotorrent.stringsimilarity.set.Variants.*;
@@ -206,19 +207,22 @@ class SimilarityTest {
     // ************************ FINGERPRINT-BASED ************************
 
     @Test
-    void testWinnowing(){
+    void testWinnowing() {
         // distinct fingerprints for s1: [1052657, 1275113, 1036785]
         // distinct fingerprints for s2: [         1275113, 1036785, 1055071]
         // intersection: [1275113, 1036785]
         // dice: 2*2 / (3+3) = 4/6 = 0.66...
 
-        Assertions.assertEquals(4.0/6, org.sotorrent.stringsimilarity.fingerprint.Variants.winnowingFourGramDice(s1,s2), Similarity.DELTA_MAX);
+        Assertions.assertEquals(4.0 / 6, org.sotorrent.stringsimilarity.fingerprint.Variants.winnowingFourGramDice(s1, s2), Similarity.DELTA_MAX);
 
         double sim = org.sotorrent.stringsimilarity.fingerprint.Variants.winnowingFourGramDice("public Node(int n)", "public Node(int v)");
         Assertions.assertEquals(1.0, sim, Similarity.DELTA_MAX);
 
         assertThrows(InputTooShortException.class, () -> org.sotorrent.stringsimilarity.fingerprint.Variants.winnowingFourGramDice("ab", ""));
         assertThrows(InputTooShortException.class, () -> org.sotorrent.stringsimilarity.fingerprint.Variants.winnowingFourGramDice("", "ab"));
-    }
 
+        // Stack Overflow question 38463455, version 3 compared to 4
+        // input too short for default window size
+        assertThrows(InputTooShortException.class, () -> org.sotorrent.stringsimilarity.fingerprint.Variants.winnowingFourGramDiceNormalized("a = [1,2,3]", "a = [1,2,20,5,99,70,35]"));
+    }
 }

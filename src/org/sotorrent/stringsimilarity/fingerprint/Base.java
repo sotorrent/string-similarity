@@ -1,5 +1,7 @@
 package org.sotorrent.stringsimilarity.fingerprint;
 
+import org.sotorrent.util.exceptions.InputTooShortException;
+
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -33,6 +35,10 @@ public class Base {
         Integer[] nGramHashes = getNGramHashes(nGrams);
         List<Integer> fingerprintList = new LinkedList<>();
         int minHashPos = -1; // index of minimum hash
+
+        if (windowSize > nGramHashes.length) {
+            throw new InputTooShortException("Window size too large for nGram list.");
+        }
 
         for (int windowBegin = 0; windowBegin <= nGramHashes.length-windowSize; windowBegin++) {
             int windowEnd = windowBegin+windowSize-1; // index of last hash in window
