@@ -209,7 +209,6 @@ class SimilarityTest {
 
     @Test
     void testManhattan() {
-
         // Stack Overflow question 38463455, version 3 compared to 4
         assertThrows(InputTooShortException.class, () -> org.sotorrent.stringsimilarity.profile.Variants.manhattanFourGramNormalized("to", "to:"));
     }
