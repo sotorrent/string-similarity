@@ -44,7 +44,7 @@
         <!-- see also https://stackoverflow.com/a/14013645 -->
         <repository>
             <id>sotorrent</id>
-            <url>https://raw.github.com/sotorrent/maven/releases/</url>
+            <url>https://raw.github.com/sotorrent/releases/master/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -53,7 +53,7 @@
     </repositories>
 
     <dependencies>
-        <!-- https://github.com/sotorrent/util/tree/master/releases/ -->
+        <!-- https://github.com/sotorrent/util/ -->
         <dependency>
             <groupId>org.sotorrent</groupId>
             <artifactId>util</artifactId>
