@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.sotorrent.stringsimilarity.Similarity;
 import org.sotorrent.stringsimilarity.profile.Variants;
+import org.sotorrent.util.MathUtils;
 import org.sotorrent.util.exceptions.InputTooShortException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -139,6 +140,11 @@ class SimilarityTest {
 
         assertThrows(InputTooShortException.class, () -> fourGramSimilarityKondrak05("ab", ""));
         assertThrows(InputTooShortException.class, () -> fourGramSimilarityKondrak05("", "ab"));
+
+        // taken from Stack Overflow answer 34779037, versions 2 and 3
+        String tmp1 = "Note that you need to *comma-separate* them.";
+        String tmp2 = "I'm pretty sure that the `application/x-unknown` is the one that would work for you since this is what Firefox itself determines as your file's mime-type.";
+        assertTrue(MathUtils.greaterThan(fiveGramDice(tmp1, tmp2), 0.04));
     }
 
     @Test
