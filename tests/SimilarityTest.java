@@ -54,6 +54,12 @@ class SimilarityTest {
         // levenshtein distance: 2
         assertEquals((2.0-2.0)/2.0, levenshtein("ab", ""), Similarity.DELTA_MAX);
         assertEquals((2.0-2.0)/2.0, levenshtein("", "ab"), Similarity.DELTA_MAX);
+
+        // str1: "2007"
+        // str2: "2008"
+        // max length: 4
+        // levenshtein distance: 1
+        assertEquals((4.0-1.0)/4.0, levenshtein("2007", "2008"), Similarity.DELTA_MAX);
     }
 
     @Test
@@ -74,6 +80,12 @@ class SimilarityTest {
         // damerau-levenshtein distance: 2
         assertEquals((2.0-2.0)/2.0, damerauLevenshtein("ab", ""));
         assertEquals((2.0-2.0)/2.0, damerauLevenshtein("", "ab"));
+
+        // str1: "2007"
+        // str2: "2008"
+        // max length: 4
+        // damerau-levenshtein distance: 1
+        assertEquals((4.0-1.0)/4.0, damerauLevenshtein("2007", "2008"), Similarity.DELTA_MAX);
     }
 
     @Test
@@ -84,9 +96,15 @@ class SimilarityTest {
         // str1: "ab"
         // str2: ""
         // max length: 2
-        // longestCommonSubsequence similarity: 2
+        // optimal string alignment distance: 2
         assertEquals((2.0-2.0)/2.0, optimalAlignment("ab", ""), Similarity.DELTA_MAX);
         assertEquals((2.0-2.0)/2.0, optimalAlignment("", "ab"), Similarity.DELTA_MAX);
+
+        // str1: "2007"
+        // str2: "2008"
+        // max length: 4
+        // optimal string alignment distance: 1
+        assertEquals((4.0-1.0)/4.0, optimalAlignment("2007", "2008"), Similarity.DELTA_MAX);
     }
 
     @Test
@@ -108,6 +126,12 @@ class SimilarityTest {
         // longestCommonSubsequence similarity: 0
         assertEquals(0.0, longestCommonSubsequence("ab", ""), Similarity.DELTA_MAX);
         assertEquals(0.0, longestCommonSubsequence("", "ab"), Similarity.DELTA_MAX);
+
+        // str1: "2007"
+        // str2: "2008"
+        // max length: 4
+        // longest common subsequence: 3
+        assertEquals(3.0/4.0, longestCommonSubsequence("2007", "2008"), Similarity.DELTA_MAX);
     }
 
     // ************************ SET-BASED ************************

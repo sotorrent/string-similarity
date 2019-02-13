@@ -161,7 +161,7 @@ public class Base {
             d_str1.put(str1.charAt(i-2), i);
         }
 
-        return (double) (Math.max(n, m) - dist[n][m]) / Math.max(n, m);
+        return (double) (Math.max(n, m) - dist[n+1][m+1]) / Math.max(n, m);
     }
 
     /*
